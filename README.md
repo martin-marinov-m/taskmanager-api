@@ -1,12 +1,50 @@
 # TaskManagerAPI
-
 Simple task manager API project for managing tasks.
 
 ## Features
-_To be added_
+- User authentication using JWT
+- Role-based authorization (Admin, TeamLeader, Developer)
+- User registration (Admin only)
+- Secure password handling via ASP.NET Core Identity
+- Pre-seeded users and roles
+- Swagger UI with JWT authentication support
 
 ## Tech Stack
-_To be added_
+- ASP.NET Core Web API (.NET 9)
+- Entity Framework Core
+- SQL Server
+- ASP.NET Core Identity
+- JWT Authentication
+- Swagger (Swashbuckle)
 
 ## Getting Started
-_To be added_
+1. Clone repository
+```bash
+git clone https://github.com/your-username/taskmanager-api.git
+cd taskmanager-api
+```
+
+2. Configure environment
+
+Update appsettings.Development.json:
+- Connection string
+- JWT settings
+- Seeded users
+
+3. Apply migrations
+
+Package Manager Console:
+```powershell
+Update-Database
+```
+
+CLI: 
+```bash
+dotnet ef database update
+```
+
+4. Run the application
+
+Swagger UI: 
+
+`https://localhost:7168/swagger`
