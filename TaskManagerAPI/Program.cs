@@ -8,6 +8,7 @@ using TaskManagerAPI.Data;
 using TaskManagerAPI.Data.Configurations.Identity;
 using TaskManagerAPI.Models.Identity;
 using TaskManagerAPI.Repositories;
+using TaskManagerAPI.Services;
 using TaskManagerAPI.Services.Identity;
 
 namespace TaskManagerAPI
@@ -82,10 +83,15 @@ namespace TaskManagerAPI
             }
             );
 
+            builder.Services.AddAutoMapper(cfg => { }, typeof(Program));
+
+            //Identity
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IAccountService, AccountService>();
 
+            //TaskItemStatus
             builder.Services.AddScoped<ITaskItemStatusRepository, TaskItemStatusRepository>();
+            builder.Services.AddScoped<ITaskItemStatusService, TaskItemStatusService>();
 
             var app = builder.Build();
 

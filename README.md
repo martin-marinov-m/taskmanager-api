@@ -10,6 +10,8 @@ Simple task manager API project for managing tasks.
 - Swagger UI with JWT authentication support
 - Task management domain (TaskItem, TaskItemStatus)
 - Repository pattern implementation for data access
+- TaskItemStatus management (CRUD - in progress)
+- DTO mapping using AutoMapper
 
 ## Tech Stack
 - ASP.NET Core Web API (.NET 9)
@@ -19,6 +21,7 @@ Simple task manager API project for managing tasks.
 - JWT Authentication
 - Swagger (Swashbuckle)
 - Repository Pattern
+- AutoMapper
 
 ## Architecture
 The project follows a layered architecture:
