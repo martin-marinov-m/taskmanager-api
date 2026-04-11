@@ -8,6 +8,7 @@ Simple task manager API project for managing tasks.
 - Secure password handling via ASP.NET Core Identity
 - Pre-seeded users and roles
 - Swagger UI with JWT authentication support
+- Task management domain (TaskItem, TaskItemStatus)
 
 ## Tech Stack
 - ASP.NET Core Web API (.NET 9)

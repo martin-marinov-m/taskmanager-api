@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using TaskManagerAPI.Constants;
 
-namespace TaskManagerAPI.Data.Identity
+namespace TaskManagerAPI.Data.Configurations.Identity
 {
     public static class RoleSeeder
     {

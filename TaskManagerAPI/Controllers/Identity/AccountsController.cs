@@ -29,12 +29,16 @@ namespace TaskManagerAPI.Controllers.Identity
                 return Created();
 
             }
-            catch (Exception ex)
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (ArgumentException ex)
             {
                 return BadRequest(new { message = ex.Message });
             }
 
-            
+
         }
     }
 }

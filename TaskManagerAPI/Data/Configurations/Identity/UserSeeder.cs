@@ -2,7 +2,7 @@
 using TaskManagerAPI.Constants;
 using TaskManagerAPI.Models.Identity;
 
-namespace TaskManagerAPI.Data.Identity
+namespace TaskManagerAPI.Data.Configurations.Identity
 {
     public static class UserSeeder
     {

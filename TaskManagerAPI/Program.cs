@@ -5,7 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using TaskManagerAPI.Data;
-using TaskManagerAPI.Data.Identity;
+using TaskManagerAPI.Data.Configurations.Identity;
 using TaskManagerAPI.Models.Identity;
 using TaskManagerAPI.Services.Identity;
 
@@ -82,7 +82,8 @@ namespace TaskManagerAPI
             );
 
             builder.Services.AddScoped<IAuthService, AuthService>();
-            builder.Services.AddScoped<IAccountService, AccountService>();  
+            builder.Services.AddScoped<IAccountService, AccountService>();
+
 
 
             var app = builder.Build();
