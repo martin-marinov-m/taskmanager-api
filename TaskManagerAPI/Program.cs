@@ -7,6 +7,7 @@ using System.Text;
 using TaskManagerAPI.Data;
 using TaskManagerAPI.Data.Configurations.Identity;
 using TaskManagerAPI.Models.Identity;
+using TaskManagerAPI.Repositories;
 using TaskManagerAPI.Services.Identity;
 
 namespace TaskManagerAPI
@@ -84,7 +85,7 @@ namespace TaskManagerAPI
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IAccountService, AccountService>();
 
-
+            builder.Services.AddScoped<ITaskItemStatusRepository, TaskItemStatusRepository>();
 
             var app = builder.Build();
 

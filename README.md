@@ -9,6 +9,7 @@ Simple task manager API project for managing tasks.
 - Pre-seeded users and roles
 - Swagger UI with JWT authentication support
 - Task management domain (TaskItem, TaskItemStatus)
+- Repository pattern implementation for data access
 
 ## Tech Stack
 - ASP.NET Core Web API (.NET 9)
@@ -17,6 +18,16 @@ Simple task manager API project for managing tasks.
 - ASP.NET Core Identity
 - JWT Authentication
 - Swagger (Swashbuckle)
+- Repository Pattern
+
+## Architecture
+The project follows a layered architecture:
+
+- Controllers – handle HTTP requests and responses
+- Services – contain business logic
+- Repositories – handle data access using Entity Framework Core
+- Data layer – DbContext and entity configurations
+
 
 ## Getting Started
 1. Clone repository
