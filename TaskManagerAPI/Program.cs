@@ -93,6 +93,9 @@ namespace TaskManagerAPI
             builder.Services.AddScoped<ITaskItemStatusRepository, TaskItemStatusRepository>();
             builder.Services.AddScoped<ITaskItemStatusService, TaskItemStatusService>();
 
+            //TaskItem
+            builder.Services.AddScoped<ITaskItemRepository, TaskItemRepository>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
