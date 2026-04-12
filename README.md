@@ -10,7 +10,7 @@ Simple task manager API project for managing tasks.
 - Swagger UI with JWT authentication support
 - Task management domain (TaskItem, TaskItemStatus)
 - Repository pattern implementation for data access
-- TaskItemStatus management (GetAll, GetById endpoints)
+- TaskItemStatus management (GetAll, GetById, Create)
 - DTO mapping using AutoMapper
 
 ## Tech Stack
@@ -42,6 +42,7 @@ The project follows a layered architecture:
 ### TaskItemStatuses
 - GET /api/taskitemstatuses
 - GET /api/taskitemstatuses/{id}
+- POST /api/taskitemstatuses
 
 ## Getting Started
 1. Clone repository

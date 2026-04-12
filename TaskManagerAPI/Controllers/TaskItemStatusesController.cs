@@ -40,5 +40,13 @@ namespace TaskManagerAPI.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<ActionResult<TaskItemStatusDto>> CreateStatusAsync([FromBody] CreateTaskItemStatusDto createStatusDto, CancellationToken ct)
+        {
+            var result = await _taskItemStatusService.CreateAsync(createStatusDto, ct);
+
+            return CreatedAtRoute("GetStatusByIdAsync", new { id = result.Id }, result);
+        }
+
     }
 }
