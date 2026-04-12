@@ -24,5 +24,21 @@ namespace TaskManagerAPI.Controllers
 
             return Ok(taskItemStatusDtos);
         }
+
+        [HttpGet("{id}", Name = "GetStatusByIdAsync")]
+        public async Task<ActionResult<TaskItemStatusDto>> GetStatusByIdAsync(int id, CancellationToken ct)
+        {
+            try
+            {
+                var taskItemStatusDto = await _taskItemStatusService.GetByIdAsync(id, ct);
+
+                return Ok(taskItemStatusDto);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
+
     }
 }

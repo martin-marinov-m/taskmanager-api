@@ -10,7 +10,7 @@ Simple task manager API project for managing tasks.
 - Swagger UI with JWT authentication support
 - Task management domain (TaskItem, TaskItemStatus)
 - Repository pattern implementation for data access
-- TaskItemStatus management (CRUD - in progress)
+- TaskItemStatus management (GetAll, GetById endpoints)
 - DTO mapping using AutoMapper
 
 ## Tech Stack
@@ -31,6 +31,17 @@ The project follows a layered architecture:
 - Repositories – handle data access using Entity Framework Core
 - Data layer – DbContext and entity configurations
 
+## API Endpoints
+
+### Authentication
+- POST /api/auth/login
+
+### Accounts (Admin only)
+- POST /api/accounts
+
+### TaskItemStatuses
+- GET /api/taskitemstatuses
+- GET /api/taskitemstatuses/{id}
 
 ## Getting Started
 1. Clone repository
