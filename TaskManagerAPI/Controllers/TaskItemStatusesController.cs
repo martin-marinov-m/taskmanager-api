@@ -66,5 +66,20 @@ namespace TaskManagerAPI.Controllers
             }
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteStatusAsync(int id, CancellationToken ct)
+        {
+            try
+            {
+                await _taskItemStatusService.DeleteAsync(id, ct);
+                return NoContent();
+
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
+
     }
 }

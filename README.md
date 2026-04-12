@@ -1,5 +1,5 @@
 # TaskManagerAPI
-Simple task manager API project for managing tasks.
+RESTful ASP.NET Core Web API for managing tasks with JWT authentication, role-based authorization, and layered architecture.
 
 ## Features
 - User authentication using JWT
@@ -10,7 +10,7 @@ Simple task manager API project for managing tasks.
 - Swagger UI with JWT authentication support
 - Task management domain (TaskItem, TaskItemStatus)
 - Repository pattern implementation for data access
-- TaskItemStatus management (GetAll, GetById, Create, Update)
+- TaskItemStatus management (GetAll, GetById, Create, Update, Delete)
 - DTO mapping using AutoMapper
 
 ## Tech Stack
@@ -40,10 +40,23 @@ The project follows a layered architecture:
 - POST /api/accounts
 
 ### TaskItemStatuses
-- GET /api/taskitemstatuses
-- GET /api/taskitemstatuses/{id}
-- POST /api/taskitemstatuses
-- PUT /api/taskitemstatuses/{id}
+Requires authentication (JWT Bearer token)
+
+- GET /api/taskitemstatuses – get all statuses
+- GET /api/taskitemstatuses/{id} – get status by id
+- POST /api/taskitemstatuses – create new status
+- PUT /api/taskitemstatuses/{id} – update status by id
+- DELETE /api/taskitemstatuses/{id} – delete status by id
+
+## Authentication
+This API uses JWT Bearer authentication.
+
+To access protected endpoints:
+1. Call `/api/auth/login`
+2. Copy the returned JWT token
+3. Use it in requests:
+
+Authorization: Bearer {token}
 
 ## Getting Started
 1. Clone repository
