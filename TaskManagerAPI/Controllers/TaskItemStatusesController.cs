@@ -48,5 +48,23 @@ namespace TaskManagerAPI.Controllers
             return CreatedAtRoute("GetStatusByIdAsync", new { id = result.Id }, result);
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateStatusAsync(int id, [FromBody] TaskItemStatusDto statusDto, CancellationToken ct)
+        {
+            try
+            {
+                await _taskItemStatusService.UpdateAsync(id, statusDto, ct);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
     }
 }
