@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagerAPI.Models.Dtos;
+using TaskManagerAPI.Models.Dtos.TaskItemStatusDtos;
 using TaskManagerAPI.Services;
 
 namespace TaskManagerAPI.Controllers

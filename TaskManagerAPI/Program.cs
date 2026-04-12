@@ -95,6 +95,7 @@ namespace TaskManagerAPI
 
             //TaskItem
             builder.Services.AddScoped<ITaskItemRepository, TaskItemRepository>();
+            builder.Services.AddScoped<ITaskItemService, TaskItemService>();
 
             var app = builder.Build();
 

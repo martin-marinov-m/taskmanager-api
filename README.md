@@ -11,6 +11,7 @@ RESTful ASP.NET Core Web API for managing tasks with JWT authentication, role-ba
 - Task management domain (TaskItem, TaskItemStatus)
 - Repository pattern implementation for data access
 - TaskItemStatus management (GetAll, GetById, Create, Update, Delete)
+- TaskItems management (CRUD - in progress)
 - DTO mapping using AutoMapper
 
 ## Tech Stack

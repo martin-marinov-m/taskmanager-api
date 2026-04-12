@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TaskManagerAPI.Models.Dtos
+namespace TaskManagerAPI.Models.Dtos.TaskItemStatusDtos
 {
     public class TaskItemStatusDto
     {

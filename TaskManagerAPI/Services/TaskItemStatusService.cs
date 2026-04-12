@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using TaskManagerAPI.Models;
 using TaskManagerAPI.Models.Dtos;
+using TaskManagerAPI.Models.Dtos.TaskItemStatusDtos;
 using TaskManagerAPI.Repositories;
 
 namespace TaskManagerAPI.Services
