@@ -83,6 +83,33 @@ namespace TaskManagerAPI.Controllers
 
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateTaskItemAsync(int id, [FromBody] UpdateTaskItemDto updateDto, CancellationToken ct)
+        {
+            try
+            {
+                var userInfoDto = GetUserInfoDto();
+
+                await _taskItemService.UpdateAsync(id, updateDto, userInfoDto, ct);
+                return NoContent();
+
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { message = ex.Message });
+            }
+            
+            
+
+        }
         private string GetUserId()
         {
             return User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new UnauthorizedAccessException("Unauthorized access");
