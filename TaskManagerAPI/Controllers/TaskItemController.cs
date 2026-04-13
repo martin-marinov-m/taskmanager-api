@@ -37,9 +37,30 @@ namespace TaskManagerAPI.Controllers
             
         }
 
+        [HttpGet("{id}", Name = "GetTaskByIdAsync")]
+        public async Task<ActionResult<TaskItemDto>> GetTaskItemByIdAsync(int id, CancellationToken ct)
+        {
+            try
+            {
+                var userInfoDto = GetUserInfoDto();
+
+                var taskItemDto = await _taskItemService.GetByIdAsync(id, userInfoDto, ct);
+
+                return Ok(taskItemDto);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { message = ex.Message });
+            }
+        }
+
         private string GetUserId()
         {
-            return User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new UnauthorizedAccessException("Unauthorize access");
+            return User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new UnauthorizedAccessException("Unauthorized access");
         }
 
         private bool IsUserAdmin()
