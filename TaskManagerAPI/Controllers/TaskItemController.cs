@@ -107,8 +107,26 @@ namespace TaskManagerAPI.Controllers
                 return Unauthorized(new { message = ex.Message });
             }
             
-            
+        }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTaskItemAsync(int id, CancellationToken ct)
+        {
+            try
+            {
+                var userInfoDto = GetUserInfoDto();
+
+                await _taskItemService.DeleteAsync(id, userInfoDto, ct);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { message = ex.Message });
+            }
         }
         private string GetUserId()
         {
