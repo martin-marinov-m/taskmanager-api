@@ -58,6 +58,31 @@ namespace TaskManagerAPI.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<ActionResult<TaskItemDto>> CreateTaskItemAsync([FromBody] CreateTaskItemDto createDto, CancellationToken ct)
+        {
+            try
+            {
+                var userInfoDto = GetUserInfoDto();
+
+                var result = await _taskItemService.AddAsync(createDto, userInfoDto, ct);
+                return CreatedAtRoute("GetTaskByIdAsync", new { id = result.Id }, result);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { message = ex.Message });
+            }
+
+        }
+
         private string GetUserId()
         {
             return User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new UnauthorizedAccessException("Unauthorized access");
