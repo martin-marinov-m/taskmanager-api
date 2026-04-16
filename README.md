@@ -100,3 +100,18 @@ dotnet ef database update
 Swagger UI: 
 
 `https://localhost:7168/swagger`
+
+
+## Testing
+
+The project includes integration tests using xUnit and SQLite in-memory database.
+
+- Separate test project: `TaskManagerAPI.Tests`
+- Uses SQLite in-memory database to simulate real relational database behavior
+- Each test runs against a fresh database instance
+
+Run tests:
+
+```bash
+dotnet test
+
