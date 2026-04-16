@@ -8,7 +8,7 @@ namespace TaskManagerAPI.Services
         Task<IEnumerable<TaskItemStatusDto>> GetAllAsync(CancellationToken ct);
         Task<TaskItemStatusDto> GetByIdAsync(int id, CancellationToken ct);
 
-        Task<TaskItemStatusDto> CreateAsync(CreateTaskItemStatusDto createStatusDto, CancellationToken ct);
+        Task<TaskItemStatusDto> AddAsync(CreateTaskItemStatusDto createStatusDto, CancellationToken ct);
 
         Task UpdateAsync(int id, TaskItemStatusDto statusDto, CancellationToken ct);
 

@@ -39,7 +39,7 @@ namespace TaskManagerAPI.Services
             return taskItemStatusDto;
         }
 
-        public async Task<TaskItemStatusDto> CreateAsync(CreateTaskItemStatusDto createStatusDto, CancellationToken ct)
+        public async Task<TaskItemStatusDto> AddAsync(CreateTaskItemStatusDto createStatusDto, CancellationToken ct)
         {
             var taskItemStatus = _mapper.Map<TaskItemStatus>(createStatusDto);
 
