@@ -108,6 +108,7 @@ The project includes integration tests using xUnit and SQLite in-memory database
 
 - Separate test project: `TaskManagerAPI.Tests`
 - Uses SQLite in-memory database to simulate real relational database behavior
+- Handles provider differences (SQL Server vs SQLite) for accurate testing
 - Each test runs against a fresh database instance
 - Covers repository and service layers
 
