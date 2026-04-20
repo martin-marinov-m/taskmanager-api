@@ -1,18 +1,37 @@
 # TaskManagerAPI
 RESTful ASP.NET Core Web API for managing tasks with JWT authentication, role-based authorization, and layered architecture.
 
+## API Preview
+
+### Swagger Overview
+![Swagger Overview](./swagger-screenshots/01-swagger-overview.png)
+
+### Authentication (Login)
+![Authentication Login](./swagger-screenshots/02-auth-login.png)
+
+### Bearer Authorization
+![Bearer Authorization](./swagger-screenshots/03-auth-bearer.png)
+
+### Get TaskItems – Developer (Filtered)
+![TaskItems - Developer (Filtered)](./swagger-screenshots/04-taskitems-getall-developer.png)
+
+### Get TaskItems – Admin (All Data)
+![TaskItems - Admin (All Data)](./swagger-screenshots/05-taskitems-getall-admin.png)
+
+
 ## Features
-- User authentication using JWT
+- JWT authentication with ASP.NET Core Identity
 - Role-based authorization (Admin, TeamLeader, Developer)
 - User registration (Admin only)
 - Secure password handling via ASP.NET Core Identity
 - Pre-seeded users and roles
 - Swagger UI with JWT authentication support
 - Task management domain (TaskItem, TaskItemStatus)
-- Repository pattern implementation for data access
+- Clean layered architecture (Controller → Service → Repository)
 - TaskItemStatus management (GetAll, GetById, Create, Update, Delete)
 - TaskItems management (GetAll, GetById, Create, Update, Delete)
-- Users can access only their own tasks (unless Admin)
+- Custom response headers for paging metadata
+- Role-based data access (Admin vs User)
 - DTO mapping using AutoMapper
 
 ## Tech Stack
@@ -107,10 +126,15 @@ Swagger UI:
 The project includes integration tests using xUnit and SQLite in-memory database.
 
 - Separate test project: `TaskManagerAPI.Tests`
+- xUnit testing framework
 - Uses SQLite in-memory database to simulate real relational database behavior
 - Handles provider differences (SQL Server vs SQLite) for accurate testing
 - Each test runs against a fresh database instance
-- Covers repository and service layers
+- Covers:
+ - Repository layer
+ - Service layer (business logic)
+ - Authorization logic (Admin vs User)
+ - Paging and filtering scenarios
 
 Run tests:
 
