@@ -1,18 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace TaskManagerAPI.Models.Identity
+﻿namespace TaskManagerAPI.Models.Identity
 {
     public class RegisterRequest
     {
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
 
-        [Required]
-        [MinLength(6)]
-        public string Password { get; set; }
+        public string Password { get; set; } = string.Empty;
 
-        [Required]
-        public string Role { get; set; }
+        public string Role { get; set; } = string.Empty;    
     }
 }

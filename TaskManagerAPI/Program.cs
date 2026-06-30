@@ -1,3 +1,5 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +35,10 @@ namespace TaskManagerAPI
                 options.SignIn.RequireConfirmedEmail = false;
             }
             ).AddRoles<IdentityRole>().AddEntityFrameworkStores<TaskManagerDbContext>().AddDefaultTokenProviders();
+
+            builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+            builder.Services.AddFluentValidationAutoValidation();
+
 
             var key = builder.Configuration["JWT:Key"] ?? throw new KeyNotFoundException("JWT key not Found");
             var issuer = builder.Configuration["JWT:Issuer"] ?? throw new KeyNotFoundException("JWT issuer not Found");

@@ -1,19 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace TaskManagerAPI.Models.Dtos.TaskItemDtos
+﻿namespace TaskManagerAPI.Models.Dtos.TaskItemDtos
 {
     public class UpdateTaskItemDto
     {
         public int Id { get; set; }
 
-        [Required]
-        [MaxLength(50)]
         public string Title { get; set; } = string.Empty;
 
-        [Required]
-        [MaxLength(255)]
         public string Description { get; set; } = string.Empty;
-
 
         public DateTime? DueDate { get; set; }
 

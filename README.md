@@ -33,6 +33,7 @@ RESTful ASP.NET Core Web API for managing tasks with JWT authentication, role-ba
 - Custom response headers for paging metadata
 - Role-based data access (Admin vs User)
 - DTO mapping using AutoMapper
+- FluentValidation for request validation
 
 ## Tech Stack
 - ASP.NET Core Web API (.NET 9)
@@ -43,6 +44,7 @@ RESTful ASP.NET Core Web API for managing tasks with JWT authentication, role-ba
 - Swagger (Swashbuckle)
 - Repository Pattern
 - AutoMapper
+- FluentValidation
 
 ## Architecture
 The project follows a layered architecture:
@@ -91,7 +93,7 @@ Authorization: Bearer {token}
 ## Getting Started
 1. Clone repository
 ```bash
-git clone https://github.com/your-username/taskmanager-api.git
+git clone https://github.com/martin-marinov-m/taskmanager-api.git
 cd taskmanager-api
 ```
 
