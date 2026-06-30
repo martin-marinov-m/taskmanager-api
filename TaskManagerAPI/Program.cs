@@ -9,6 +9,7 @@ using System.Text;
 using TaskManagerAPI.Data;
 using TaskManagerAPI.Data.Configurations.Identity;
 using TaskManagerAPI.Models.Identity;
+using TaskManagerAPI.Options;
 using TaskManagerAPI.Repositories;
 using TaskManagerAPI.Services;
 using TaskManagerAPI.Services.Identity;
@@ -39,21 +40,37 @@ namespace TaskManagerAPI
             builder.Services.AddValidatorsFromAssemblyContaining<Program>();
             builder.Services.AddFluentValidationAutoValidation();
 
+            builder.Services.Configure<JWTOptions>(builder.Configuration.GetSection("JWT"));
+            builder.Services.Configure<SeededEmailsOptions>(builder.Configuration.GetSection("SeededEmails"));
+            builder.Services.Configure<SeededPasswordsOptions>(builder.Configuration.GetSection("SeededPasswords"));
 
-            var key = builder.Configuration["JWT:Key"] ?? throw new KeyNotFoundException("JWT key not Found");
-            var issuer = builder.Configuration["JWT:Issuer"] ?? throw new KeyNotFoundException("JWT issuer not Found");
-            var audience = builder.Configuration["JWT:Audience"] ?? throw new KeyNotFoundException("JWT audience not Found");
+            var jwtOptions = builder.Configuration.GetSection("JWT").Get<JWTOptions>() ?? throw new KeyNotFoundException("JWT configuration not found");
+
+            if (string.IsNullOrWhiteSpace(jwtOptions.Key))
+                throw new KeyNotFoundException("JWT key not found");
+
+            if (string.IsNullOrWhiteSpace(jwtOptions.Issuer))
+                throw new KeyNotFoundException("JWT issuer not found");
+
+            if (string.IsNullOrWhiteSpace(jwtOptions.Audience))
+                throw new KeyNotFoundException("JWT audience not found");
+
+            if (jwtOptions.TokenExpirationInHours <= 0)
+                throw new InvalidOperationException("Invalid JWT TokenExpirationInHours configuration");
 
 
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
-                ValidIssuer = issuer,
+                ValidIssuer = jwtOptions.Issuer,
+
                 ValidateAudience = true,
-                ValidAudience = audience,
+                ValidAudience = jwtOptions.Audience,
+
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key))
 
             });
 

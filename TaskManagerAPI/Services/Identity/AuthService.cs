@@ -1,21 +1,23 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using TaskManagerAPI.Models.Identity;
+using TaskManagerAPI.Options;
 
 namespace TaskManagerAPI.Services.Identity
 {
     public class AuthService : IAuthService
     {
         private readonly UserManager<TaskManagerUser> _userManager;
-        private readonly IConfiguration _config;
+        private readonly IOptions<JWTOptions> _jwtOptions;
 
-        public AuthService(UserManager<TaskManagerUser> userManager, IConfiguration config)
+        public AuthService(UserManager<TaskManagerUser> userManager, IOptions<JWTOptions> jwtOptions)
         {
             _userManager = userManager;
-            _config = config;
+            _jwtOptions = jwtOptions;
         }
         public async Task<string> Login(LoginRequest request)
         {
@@ -34,24 +36,13 @@ namespace TaskManagerAPI.Services.Identity
 
             claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
 
-            var jwtKey = _config["JWT:Key"] ?? throw new KeyNotFoundException("JWT key not Found");
-            var jwtIssuer = _config["JWT:Issuer"] ?? throw new KeyNotFoundException("JWT issuer not Found");
-            var jwtAudience = _config["JWT:Audience"] ?? throw new KeyNotFoundException("JWT audience not Found");
-            var jwtTokenExpirationInHours = _config["JWT:TokenExpirationInHours"] ?? throw new KeyNotFoundException("JWT tokenExpirationInHours not Found");
-
-            int tokenExpirationInHours;
-
-            if (!int.TryParse(jwtTokenExpirationInHours, out tokenExpirationInHours))
-                throw new InvalidOperationException("JWT TokenExpirationInHours is invalid");
-
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Value.Key));
 
             var token = new JwtSecurityToken(
-                issuer: jwtIssuer,
-                audience: jwtAudience,
+                issuer: _jwtOptions.Value.Issuer,
+                audience: _jwtOptions.Value.Audience,
                 claims: claims,
-                expires: DateTime.UtcNow.AddHours(tokenExpirationInHours),
+                expires: DateTime.UtcNow.AddHours(_jwtOptions.Value.TokenExpirationInHours),
                 signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
                 );
 

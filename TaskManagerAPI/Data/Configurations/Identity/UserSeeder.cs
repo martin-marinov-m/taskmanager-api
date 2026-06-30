@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using TaskManagerAPI.Constants;
 using TaskManagerAPI.Models.Identity;
+using TaskManagerAPI.Options;
 
 namespace TaskManagerAPI.Data.Configurations.Identity
 {
@@ -10,24 +12,36 @@ namespace TaskManagerAPI.Data.Configurations.Identity
         {
             var userManager = serviceProvider.GetRequiredService<UserManager<TaskManagerUser>>();
 
-            var config = serviceProvider.GetRequiredService<IConfiguration>();
+            var seededEmailsOptions = serviceProvider.GetRequiredService<IOptions<SeededEmailsOptions>>().Value ?? throw new KeyNotFoundException("SeededEmails configuration was not found.");
+
+            if (string.IsNullOrWhiteSpace(seededEmailsOptions.Admin))
+                throw new KeyNotFoundException("Email for Admin was not found.");
+
+            if (string.IsNullOrWhiteSpace(seededEmailsOptions.TeamLeader))
+                throw new KeyNotFoundException("Email for TeamLeader was not found.");
+
+            if (string.IsNullOrWhiteSpace(seededEmailsOptions.Developer))
+                throw new KeyNotFoundException("Email for Developer was not found.");
+
+            var seededPasswordsOptions = serviceProvider.GetRequiredService<IOptions<SeededPasswordsOptions>>().Value ?? throw new KeyNotFoundException("SeededPasswords configuration was not found."); 
+
+            if (string.IsNullOrWhiteSpace(seededPasswordsOptions.Admin))
+                throw new KeyNotFoundException("Password for Admin was not found.");
+
+            if (string.IsNullOrWhiteSpace(seededPasswordsOptions.TeamLeader))
+                throw new KeyNotFoundException("Password for TeamLeader was not found.");
+
+            if (string.IsNullOrWhiteSpace(seededPasswordsOptions.Developer))
+                throw new KeyNotFoundException("Password for Developer was not found.");
 
             //Admin role
-            var adminEmail = config["SeededEmails:Admin"] ?? throw new KeyNotFoundException("Email for Admin was not Found.");
-            var adminPassword = config["SeededPasswords:Admin"] ?? throw new KeyNotFoundException("Password for Admin was not Found.");
-            await CreateUserWithRole(userManager, adminEmail, adminPassword, Roles.Admin);
+            await CreateUserWithRole(userManager, seededEmailsOptions.Admin, seededPasswordsOptions.Admin, Roles.Admin);
 
             //TeamLeader role
-            var teamLeaderEmail = config["SeededEmails:TeamLeader"] ?? throw new KeyNotFoundException("Email for TeamLeader was not Found.");
-            var teamLeaderPassword = config["SeededPasswords:TeamLeader"] ?? throw new KeyNotFoundException("Password for TeamLeader was not Found.");
-
-            await CreateUserWithRole(userManager, teamLeaderEmail, teamLeaderPassword, Roles.TeamLeader);
+            await CreateUserWithRole(userManager, seededEmailsOptions.TeamLeader, seededPasswordsOptions.TeamLeader, Roles.TeamLeader);
 
             //Developer role
-            var developerEmail = config["SeededEmails:Developer"] ?? throw new KeyNotFoundException("Email for Developer was not Found.");
-            var developerPassword = config["SeededPasswords:Developer"] ?? throw new KeyNotFoundException("Password for Developer was not Found.");
-            await CreateUserWithRole(userManager, developerEmail, developerPassword, Roles.Developer);
-
+            await CreateUserWithRole(userManager, seededEmailsOptions.Developer, seededPasswordsOptions.Developer, Roles.Developer);
 
         }
 
