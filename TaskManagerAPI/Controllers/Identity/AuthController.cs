@@ -20,17 +20,9 @@ namespace TaskManagerAPI.Controllers.Identity
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            try
-            {
               var token = await _authService.Login(request);
 
-                return Ok(new LoginResponse {Token = token });
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(new { message = ex.Message});
-            }
-
+              return Ok(new LoginResponse {Token = token });
         }
 
     }

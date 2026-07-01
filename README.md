@@ -34,6 +34,9 @@ RESTful ASP.NET Core Web API for managing tasks with JWT authentication, role-ba
 - Role-based data access (Admin vs User)
 - DTO mapping using AutoMapper
 - FluentValidation for request validation
+- Global exception handling using ProblemDetails
+- Structured application logging
+
 
 ## Tech Stack
 - ASP.NET Core Web API (.NET 9)

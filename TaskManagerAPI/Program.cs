@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using TaskManagerAPI.Data;
 using TaskManagerAPI.Data.Configurations.Identity;
+using TaskManagerAPI.GlobalExceptionHandler;
 using TaskManagerAPI.Models.Identity;
 using TaskManagerAPI.Options;
 using TaskManagerAPI.Repositories;
@@ -58,6 +59,8 @@ namespace TaskManagerAPI
             if (jwtOptions.TokenExpirationInHours <= 0)
                 throw new InvalidOperationException("Invalid JWT TokenExpirationInHours configuration");
 
+            builder.Services.AddExceptionHandler<TaskManagerGlobalExceptionHandler>();
+            builder.Services.AddProblemDetails();
 
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters
@@ -126,16 +129,9 @@ namespace TaskManagerAPI
 
             using (var scope = app.Services.CreateScope())
             {
-                try
-                {
-                    var services = scope.ServiceProvider;
-                    await RoleSeeder.SeedRolesAsync(services);
-                    await UserSeeder.SeedUsersAsync(services);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
+                 var services = scope.ServiceProvider;
+                 await RoleSeeder.SeedRolesAsync(services);
+                 await UserSeeder.SeedUsersAsync(services);
             }
 
             if (app.Environment.IsDevelopment())
@@ -145,6 +141,8 @@ namespace TaskManagerAPI
             }
 
             app.UseHttpsRedirection();
+
+            app.UseExceptionHandler();
 
             app.UseAuthentication();
             app.UseAuthorization();

@@ -24,7 +24,6 @@ namespace TaskManagerAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TaskItemDto>>> GetAllTaskItemsAsync([FromQuery] TaskItemFilters filters, CancellationToken ct)
         {
-
                 var userInfoDto = GetUserInfoDto();
 
                 var pageResult = await _taskItemService.GetAllAsync(filters, userInfoDto, ct);
@@ -34,99 +33,43 @@ namespace TaskManagerAPI.Controllers
                 Response.Headers["X-Paging-Take"] = pageResult.Take.ToString();
 
                 return Ok(pageResult.Items);
-            
         }
 
         [HttpGet("{id}", Name = "GetTaskByIdAsync")]
         public async Task<ActionResult<TaskItemDto>> GetTaskItemByIdAsync(int id, CancellationToken ct)
         {
-            try
-            {
                 var userInfoDto = GetUserInfoDto();
 
                 var taskItemDto = await _taskItemService.GetByIdAsync(id, userInfoDto, ct);
 
                 return Ok(taskItemDto);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(new { message = ex.Message });
-            }
         }
 
         [HttpPost]
         public async Task<ActionResult<TaskItemDto>> CreateTaskItemAsync([FromBody] CreateTaskItemDto createDto, CancellationToken ct)
         {
-            try
-            {
                 var userInfoDto = GetUserInfoDto();
 
                 var result = await _taskItemService.AddAsync(createDto, userInfoDto, ct);
                 return CreatedAtRoute("GetTaskByIdAsync", new { id = result.Id }, result);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(new { message = ex.Message });
-            }
-
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTaskItemAsync(int id, [FromBody] UpdateTaskItemDto updateDto, CancellationToken ct)
         {
-            try
-            {
                 var userInfoDto = GetUserInfoDto();
 
                 await _taskItemService.UpdateAsync(id, updateDto, userInfoDto, ct);
                 return NoContent();
-
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(new { message = ex.Message });
-            }
-            
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTaskItemAsync(int id, CancellationToken ct)
         {
-            try
-            {
                 var userInfoDto = GetUserInfoDto();
 
                 await _taskItemService.DeleteAsync(id, userInfoDto, ct);
                 return NoContent();
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(new { message = ex.Message });
-            }
         }
         private string GetUserId()
         {

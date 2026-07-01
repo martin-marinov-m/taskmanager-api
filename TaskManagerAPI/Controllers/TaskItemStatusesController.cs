@@ -29,16 +29,9 @@ namespace TaskManagerAPI.Controllers
         [HttpGet("{id}", Name = "GetStatusByIdAsync")]
         public async Task<ActionResult<TaskItemStatusDto>> GetStatusByIdAsync(int id, CancellationToken ct)
         {
-            try
-            {
                 var taskItemStatusDto = await _taskItemStatusService.GetByIdAsync(id, ct);
 
                 return Ok(taskItemStatusDto);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
         }
 
         [HttpPost]
@@ -52,34 +45,15 @@ namespace TaskManagerAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateStatusAsync(int id, [FromBody] TaskItemStatusDto statusDto, CancellationToken ct)
         {
-            try
-            {
                 await _taskItemStatusService.UpdateAsync(id, statusDto, ct);
                 return NoContent();
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStatusAsync(int id, CancellationToken ct)
         {
-            try
-            {
                 await _taskItemStatusService.DeleteAsync(id, ct);
                 return NoContent();
-
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
         }
 
     }

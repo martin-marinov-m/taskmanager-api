@@ -21,22 +21,8 @@ namespace TaskManagerAPI.Controllers.Identity
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
-            try
-            {
                 await _accountService.Register(request);
                 return Created();
-
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-
-
         }
     }
 }
