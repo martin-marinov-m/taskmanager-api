@@ -15,7 +15,6 @@ namespace TaskManagerAPI.Tests
 {
     public class TaskItemStatusServiceTests
     {
-
         [Fact]
         public async Task GetAllAsync_WhenTaskItemStatusesExist_ShouldReturnTaskItemStatusDtos()
         {
@@ -83,9 +82,6 @@ namespace TaskManagerAPI.Tests
             Assert.Empty(result);
         }
 
-
-
-
         [Fact]
         public async Task GetByIdAsync_WhenTaskItemStatusIsFound_ShouldReturnTaskItemStatusDto()
         {
@@ -125,7 +121,6 @@ namespace TaskManagerAPI.Tests
 
             //Act-Assert
             await Assert.ThrowsAsync<NotFoundException>(() => service.GetByIdAsync(int.MaxValue, ct));
-
         }
 
         [Fact]
@@ -182,7 +177,6 @@ namespace TaskManagerAPI.Tests
             //Act-Assert
 
             await Assert.ThrowsAsync<ArgumentMismatchException>(() => service.UpdateAsync(int.MaxValue, updateDto, ct));
-
         }
 
         [Fact]
@@ -204,7 +198,6 @@ namespace TaskManagerAPI.Tests
             //Act-Assert
 
             await Assert.ThrowsAsync<NotFoundException>(() => service.UpdateAsync(updateDto.Id, updateDto, ct));
-
         }
 
         [Fact]
@@ -216,7 +209,6 @@ namespace TaskManagerAPI.Tests
             var service = CreateTaskItemStatusService(dbContext);
 
             var ct = CancellationToken.None;
-
 
             var status = new TaskItemStatus
             {
@@ -258,8 +250,6 @@ namespace TaskManagerAPI.Tests
             await Assert.ThrowsAsync<NotFoundException>(() => service.DeleteAsync(int.MaxValue, ct));
         }
 
-
-
         [Fact]
         public async Task DeleteAsync_WhenTaskItemStatusExists_ShouldDeleteTaskItemStatus()
         {
@@ -285,7 +275,6 @@ namespace TaskManagerAPI.Tests
 
             //Assert
             Assert.Null(result);
-
         }
 
         private SqliteConnection CreateConnection()
@@ -325,6 +314,5 @@ namespace TaskManagerAPI.Tests
             var autoMapper = mapper.CreateMapper();
             return autoMapper;
         }
-
     }
 }

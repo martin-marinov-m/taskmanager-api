@@ -43,7 +43,6 @@ namespace TaskManagerAPI.Tests
             Assert.Equal("AddTest", result.Description);
             Assert.Equal("developerTestId", result.UserId);
             Assert.Equal(1, result.StatusId);
-
         }
 
         [Fact]

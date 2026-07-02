@@ -29,7 +29,8 @@ namespace TaskManagerAPI
             builder.Services.AddControllers();
             builder.Services.AddDbContext<TaskManagerDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            builder.Services.AddIdentityCore<TaskManagerUser>(options => {
+            builder.Services.AddIdentityCore<TaskManagerUser>(options =>
+            {
                 options.Password.RequireDigit = true;
                 options.Password.RequireUppercase = true;
                 options.Password.RequireLowercase = true;
@@ -63,7 +64,6 @@ namespace TaskManagerAPI
             builder.Services.AddExceptionHandler<TaskManagerGlobalExceptionHandler>();
             builder.Services.AddProblemDetails();
 
-
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
@@ -75,7 +75,6 @@ namespace TaskManagerAPI
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key))
-
             });
 
             builder.Services.AddAuthorization();
@@ -130,9 +129,9 @@ namespace TaskManagerAPI
 
             using (var scope = app.Services.CreateScope())
             {
-                 var services = scope.ServiceProvider;
-                 await RoleSeeder.SeedRolesAsync(services);
-                 await UserSeeder.SeedUsersAsync(services);
+                var services = scope.ServiceProvider;
+                await RoleSeeder.SeedRolesAsync(services);
+                await UserSeeder.SeedUsersAsync(services);
             }
 
             if (app.Environment.IsDevelopment())
@@ -148,11 +147,9 @@ namespace TaskManagerAPI
             app.UseAuthentication();
             app.UseAuthorization();
 
-
             app.MapControllers();
 
             await app.RunAsync();
         }
     }
 }
-

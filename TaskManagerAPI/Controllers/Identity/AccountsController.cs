@@ -21,8 +21,8 @@ namespace TaskManagerAPI.Controllers.Identity
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
-                await _accountService.Register(request);
-                return Created();
+            await _accountService.Register(request);
+            return Created();
         }
     }
 }

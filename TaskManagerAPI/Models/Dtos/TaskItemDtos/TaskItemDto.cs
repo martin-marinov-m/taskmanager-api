@@ -15,6 +15,5 @@ namespace TaskManagerAPI.Models.Dtos.TaskItemDtos
         public DateTime? DueDate { get; set; }
 
         public TaskItemStatusDto? Status { get; set; }
-
     }
 }

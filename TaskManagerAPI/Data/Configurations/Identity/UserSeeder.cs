@@ -26,7 +26,7 @@ namespace TaskManagerAPI.Data.Configurations.Identity
             if (string.IsNullOrWhiteSpace(seededEmailsOptions.Developer))
                 throw new InvalidConfigurationException("SeededEmails:Developer");
 
-            var seededPasswordsOptions = serviceProvider.GetRequiredService<IOptions<SeededPasswordsOptions>>().Value ?? throw new InvalidConfigurationException("SeededPasswords"); 
+            var seededPasswordsOptions = serviceProvider.GetRequiredService<IOptions<SeededPasswordsOptions>>().Value ?? throw new InvalidConfigurationException("SeededPasswords");
 
             if (string.IsNullOrWhiteSpace(seededPasswordsOptions.Admin))
                 throw new InvalidConfigurationException("SeededPasswords:Admin");
@@ -45,7 +45,6 @@ namespace TaskManagerAPI.Data.Configurations.Identity
 
             //Developer role
             await CreateUserWithRole(userManager, seededEmailsOptions.Developer, seededPasswordsOptions.Developer, Roles.Developer);
-
         }
 
         private static async Task CreateUserWithRole(UserManager<TaskManagerUser> userManager, string email, string password, string role)

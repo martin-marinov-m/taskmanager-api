@@ -41,7 +41,7 @@ namespace TaskManagerAPI.Tests
             //Act
             var result = await service.GetAllAsync(filters, userInfo, ct);
 
-            //Assert 
+            //Assert
             Assert.NotNull(result);
             Assert.NotEmpty(result.Items);
             Assert.Equal(2, result.Items.Count());
@@ -50,7 +50,6 @@ namespace TaskManagerAPI.Tests
             Assert.Equal(10, result.Take);
             Assert.Contains(result.Items, i => i.Title == "GetAllDeveloperTest1");
             Assert.Contains(result.Items, i => i.Title == "GetAllDeveloperTest2");
-
         }
 
         [Fact]
@@ -61,7 +60,6 @@ namespace TaskManagerAPI.Tests
             using var dbContext = CreateDbContent(connection);
             var service = await CreateSeededservice(dbContext);
             var ct = CancellationToken.None;
-
 
             var filters = new TaskItemFilters();
 
@@ -74,12 +72,11 @@ namespace TaskManagerAPI.Tests
             //Act
             var result = await service.GetAllAsync(filters, userInfo, ct);
 
-            //Assert 
+            //Assert
             Assert.NotNull(result);
             Assert.Empty(result.Items);
             Assert.Equal(1, result.Page);
             Assert.Equal(10, result.Take);
-
         }
 
         [Fact]
@@ -111,7 +108,7 @@ namespace TaskManagerAPI.Tests
             //Act
             var result = await service.GetAllAsync(filters, userInfo, ct);
 
-            //Assert 
+            //Assert
             Assert.NotNull(result);
             Assert.NotEmpty(result.Items);
             Assert.Single(result.Items);
@@ -119,7 +116,6 @@ namespace TaskManagerAPI.Tests
             Assert.Equal(1, result.Page);
             Assert.Equal(1, result.Take);
             Assert.Contains(result.Items, i => i.Title == "GetAllDeveloperTest1");
-
         }
 
         [Fact]
@@ -151,7 +147,7 @@ namespace TaskManagerAPI.Tests
             //Act
             var result = await service.GetAllAsync(filters, userInfo, ct);
 
-            //Assert 
+            //Assert
             Assert.NotNull(result);
             Assert.NotEmpty(result.Items);
             Assert.Equal(2, result.Items.Count());
@@ -160,7 +156,6 @@ namespace TaskManagerAPI.Tests
             Assert.Equal(100, result.Take);
             Assert.Contains(result.Items, i => i.Title == "GetAllDeveloperTest1");
             Assert.Contains(result.Items, i => i.Title == "GetAllDeveloperTest2");
-
         }
 
         [Fact]
@@ -193,7 +188,7 @@ namespace TaskManagerAPI.Tests
             //Act
             var result = await service.GetAllAsync(filters, userInfo, ct);
 
-            //Assert 
+            //Assert
             Assert.NotNull(result);
             Assert.NotEmpty(result.Items);
             Assert.Single(result.Items);
@@ -201,7 +196,6 @@ namespace TaskManagerAPI.Tests
             Assert.Equal(1, result.Page);
             Assert.Equal(2, result.Take);
             Assert.Contains(result.Items, i => i.Title == "GetAllDeveloperTest1");
-
         }
 
         [Fact]
@@ -233,13 +227,12 @@ namespace TaskManagerAPI.Tests
             //Act
             var result = await service.GetAllAsync(filters, userInfo, ct);
 
-            //Assert 
+            //Assert
             Assert.NotNull(result);
             Assert.Empty(result.Items);
             Assert.Equal(2, result.TotalCount);
             Assert.Equal(2, result.Page);
             Assert.Equal(2, result.Take);
-          
         }
 
         [Fact]
@@ -267,7 +260,7 @@ namespace TaskManagerAPI.Tests
             //Act
             var result = await service.GetAllAsync(filters, userInfo, ct);
 
-            //Assert 
+            //Assert
             Assert.NotNull(result);
             Assert.NotEmpty(result.Items);
             Assert.Equal(4, result.Items.Count());
@@ -278,7 +271,6 @@ namespace TaskManagerAPI.Tests
             Assert.Contains(result.Items, i => i.Title == "GetAllDeveloperTest2");
             Assert.Contains(result.Items, i => i.Title == "GetAllTeamLeaderTest1");
             Assert.Contains(result.Items, i => i.Title == "GetAllTeamLeaderTest2");
-
         }
 
         [Fact]
@@ -310,16 +302,15 @@ namespace TaskManagerAPI.Tests
             //Act
             var result = await service.GetAllAsync(filters, userInfo, ct);
 
-            //Assert 
+            //Assert
             Assert.NotNull(result);
             Assert.Empty(result.Items);
             Assert.Equal(4, result.TotalCount);
             Assert.Equal(2, result.Page);
             Assert.Equal(4, result.Take);
-          
         }
 
-            [Fact]
+        [Fact]
         public async Task GetAllAsync_PagingAndSearch_Admin_TaskItemsExist_ShouldReturnFilteredTaskItemDtos()
         {
             //Arrange
@@ -349,7 +340,7 @@ namespace TaskManagerAPI.Tests
             //Act
             var result = await service.GetAllAsync(filters, userInfo, ct);
 
-            //Assert 
+            //Assert
             Assert.NotNull(result);
             Assert.NotEmpty(result.Items);
             Assert.Equal(2, result.Items.Count());
@@ -389,10 +380,10 @@ namespace TaskManagerAPI.Tests
             //Act
             var result = await service.GetAllAsync(filters, userInfo, ct);
 
-            //Assert 
+            //Assert
             Assert.NotNull(result);
             Assert.NotEmpty(result.Items);
-            Assert.Equal(4,result.Items.Count());
+            Assert.Equal(4, result.Items.Count());
             Assert.Equal(4, result.TotalCount);
             Assert.Equal(1, result.Page);
             Assert.Equal(100, result.Take);
@@ -400,7 +391,6 @@ namespace TaskManagerAPI.Tests
             Assert.Contains(result.Items, i => i.Title == "GetAllDeveloperTest2");
             Assert.Contains(result.Items, i => i.Title == "GetAllTeamLeaderTest1");
             Assert.Contains(result.Items, i => i.Title == "GetAllTeamLeaderTest2");
-
         }
 
         [Fact]
@@ -434,7 +424,7 @@ namespace TaskManagerAPI.Tests
             //Act
             var result = await service.GetByIdAsync(taskItem.Id, userInfo, ct);
 
-            //Assert 
+            //Assert
             Assert.NotNull(result);
             Assert.NotNull(result.Status);
             Assert.Null(result.DueDate);
@@ -443,7 +433,6 @@ namespace TaskManagerAPI.Tests
             Assert.Equal("GetByIdTest", result.Description);
             Assert.Equal(taskItem.CreatedDate, result.CreatedDate);
             Assert.Equal(1, result.Status.Id);
-
         }
 
         [Fact]
@@ -477,7 +466,7 @@ namespace TaskManagerAPI.Tests
             //Act
             var result = await service.GetByIdAsync(taskItem.Id, userInfo, ct);
 
-            //Assert 
+            //Assert
             Assert.NotNull(result);
             Assert.NotNull(result.Status);
             Assert.Null(result.DueDate);
@@ -505,7 +494,6 @@ namespace TaskManagerAPI.Tests
 
             //Act-Assert
             await Assert.ThrowsAsync<NotFoundException>(() => service.GetByIdAsync(int.MaxValue, userInfo, ct));
-
         }
 
         [Fact]
@@ -566,7 +554,6 @@ namespace TaskManagerAPI.Tests
             //Act-Assert
             await Assert.ThrowsAsync<ParameterValidationException>(() => service.AddAsync(taskItem, userInfo, ct));
         }
-
 
         [Fact]
         public async Task AddAsync_ValidOrNullDueDate_StatusNotExists_ShouldThrowNotFoundException()
@@ -836,8 +823,6 @@ namespace TaskManagerAPI.Tests
             Assert.Equal(updateDto.DueDate, result.DueDate);
             Assert.Equal(3, result.StatusId);
             Assert.Equal("teamLeaderTestId", result.UserId);
-
-
         }
 
         [Fact]
@@ -892,7 +877,6 @@ namespace TaskManagerAPI.Tests
             Assert.Equal(updateDto.DueDate, result.DueDate);
             Assert.Equal(3, result.StatusId);
             Assert.Equal("teamLeaderTestId", result.UserId);
-
         }
 
         [Fact]
@@ -912,7 +896,6 @@ namespace TaskManagerAPI.Tests
 
             //Act-Assert
             await Assert.ThrowsAsync<NotFoundException>(() => service.DeleteAsync(int.MaxValue, userInfo, ct));
-
         }
 
         [Fact]
@@ -945,9 +928,7 @@ namespace TaskManagerAPI.Tests
 
             //Act-Assert
             await Assert.ThrowsAsync<ForbiddenOperationException>(() => service.DeleteAsync(taskItem.Id, userInfo, ct));
-
         }
-
 
         [Fact]
         public async Task DeleteAsync_TaskItemExists_ValidUser_ShouldDeleteTaskItem()
@@ -1023,7 +1004,6 @@ namespace TaskManagerAPI.Tests
             Assert.Null(result);
         }
 
-
         private SqliteConnection CreateConnection()
         {
             var connection = new SqliteConnection("Filename=:memory:");
@@ -1056,7 +1036,6 @@ namespace TaskManagerAPI.Tests
         {
             var loggerFactory = LoggerFactory.Create(builder => { });
             var config = new MapperConfiguration(cfg => { cfg.AddProfile<MappingProfile>(); }, loggerFactory);
-
 
             return config.CreateMapper();
         }
@@ -1131,7 +1110,6 @@ namespace TaskManagerAPI.Tests
                 await dbContext.Users.AddRangeAsync(users);
                 await dbContext.SaveChangesAsync();
             }
-
         }
 
         private List<TaskItem> CreateTaskItemListForGetAll()
@@ -1176,8 +1154,5 @@ namespace TaskManagerAPI.Tests
             }
             };
         }
-
-
-
     }
 }

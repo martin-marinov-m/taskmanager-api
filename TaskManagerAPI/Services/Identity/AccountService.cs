@@ -14,6 +14,7 @@ namespace TaskManagerAPI.Services.Identity
         {
             _userManager = userManager;
         }
+
         public async Task Register(RegisterRequest request)
         {
             if (await _userManager.FindByEmailAsync(request.Email) != null)

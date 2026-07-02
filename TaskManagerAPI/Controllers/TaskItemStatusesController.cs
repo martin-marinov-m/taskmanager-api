@@ -29,9 +29,9 @@ namespace TaskManagerAPI.Controllers
         [HttpGet("{id}", Name = "GetStatusByIdAsync")]
         public async Task<ActionResult<TaskItemStatusDto>> GetStatusByIdAsync(int id, CancellationToken ct)
         {
-                var taskItemStatusDto = await _taskItemStatusService.GetByIdAsync(id, ct);
+            var taskItemStatusDto = await _taskItemStatusService.GetByIdAsync(id, ct);
 
-                return Ok(taskItemStatusDto);
+            return Ok(taskItemStatusDto);
         }
 
         [HttpPost]
@@ -45,16 +45,15 @@ namespace TaskManagerAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateStatusAsync(int id, [FromBody] TaskItemStatusDto statusDto, CancellationToken ct)
         {
-                await _taskItemStatusService.UpdateAsync(id, statusDto, ct);
-                return NoContent();
+            await _taskItemStatusService.UpdateAsync(id, statusDto, ct);
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStatusAsync(int id, CancellationToken ct)
         {
-                await _taskItemStatusService.DeleteAsync(id, ct);
-                return NoContent();
+            await _taskItemStatusService.DeleteAsync(id, ct);
+            return NoContent();
         }
-
     }
 }

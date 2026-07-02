@@ -19,6 +19,5 @@ namespace TaskManagerAPI.Models
 
         public int StatusId { get; set; }
         public TaskItemStatus? Status { get; set; }
-
     }
 }

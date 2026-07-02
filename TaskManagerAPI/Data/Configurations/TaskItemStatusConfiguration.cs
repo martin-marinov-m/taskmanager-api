@@ -26,8 +26,6 @@ namespace TaskManagerAPI.Data.Configurations
                     Id = 3,
                     Name = "Completed",
                 });
-
-
         }
     }
 }

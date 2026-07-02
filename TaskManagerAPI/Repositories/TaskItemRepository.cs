@@ -34,7 +34,6 @@ namespace TaskManagerAPI.Repositories
             return true;
         }
 
-
         public async Task<IEnumerable<TaskItem>> GetAllAsync(CancellationToken ct)
         {
             return await _dbContext.TaskItems.AsNoTracking().Include(ti => ti.Status).Include(ti => ti.User).ToListAsync(ct);

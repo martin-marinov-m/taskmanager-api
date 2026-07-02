@@ -92,7 +92,6 @@ namespace TaskManagerAPI.Tests
             //Assert
             Assert.NotNull(result);
 
-
             Assert.True(result.Count() >= 4);
             Assert.NotEmpty(result);
             Assert.Contains(result, r => r.Name == "GetAllStatusesTest1");
@@ -125,7 +124,6 @@ namespace TaskManagerAPI.Tests
             Assert.Empty(result);
         }
 
-
         [Fact]
         public async Task AddAsync_ShouldAddTaskItemStatus()
         {
@@ -151,8 +149,6 @@ namespace TaskManagerAPI.Tests
             Assert.Equal(status.Id, result.Id);
             Assert.Equal("AddStatusTest", result.Name);
         }
-
-
 
         [Fact]
         public async Task Update_WhenTaskItemStatusDoesExists_ShouldUpdateTaskItemStatus()
@@ -188,9 +184,6 @@ namespace TaskManagerAPI.Tests
             Assert.Equal(status.Id, result.Id);
             Assert.Equal("NewUpdateStatusTest", result.Name);
         }
-
-
-
 
         [Fact]
         public async Task DeleteByIdAsync_WhenTaskItemStatusExists_ShouldDeleteAndReturnTrue()
@@ -236,7 +229,6 @@ namespace TaskManagerAPI.Tests
 
             //Assert
             Assert.False(resultSucceeded);
-
         }
 
         [Fact]
@@ -281,7 +273,6 @@ namespace TaskManagerAPI.Tests
             //Assert
             Assert.False(result);
         }
-
 
         private SqliteConnection CreateConnection()
         {

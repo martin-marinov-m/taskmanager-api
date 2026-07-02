@@ -11,6 +11,5 @@
         public DateTime? DueDate { get; set; }
 
         public int StatusId { get; set; }
-
     }
 }

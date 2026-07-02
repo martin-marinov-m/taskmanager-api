@@ -12,6 +12,7 @@
 
         public override string Title => "Arguments mismatch";
         public override int StatusCode => StatusCodes.Status400BadRequest;
+
         public ArgumentMismatchException(string expectedName, string expectedValue, string actualName, string actualValue) : base($"{expectedName} does not match {actualName}.")
         {
             ExpectedName = expectedName;

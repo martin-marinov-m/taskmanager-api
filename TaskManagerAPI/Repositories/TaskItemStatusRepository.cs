@@ -12,6 +12,7 @@ namespace TaskManagerAPI.Repositories
         {
             _dbContext = dbContext;
         }
+
         public async Task AddAsync(TaskItemStatus entity, CancellationToken ct)
         {
             await _dbContext.TaskItemStatuses.AddAsync(entity, ct);

@@ -8,7 +8,9 @@ namespace TaskManagerAPI.Data
 {
     public class TaskManagerDbContext : IdentityDbContext<TaskManagerUser>
     {
-        public TaskManagerDbContext(DbContextOptions<TaskManagerDbContext> options) : base(options) { }
+        public TaskManagerDbContext(DbContextOptions<TaskManagerDbContext> options) : base(options)
+        {
+        }
 
         public DbSet<TaskItem> TaskItems { get; set; }
         public DbSet<TaskItemStatus> TaskItemStatuses { get; set; }

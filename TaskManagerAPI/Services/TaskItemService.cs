@@ -38,7 +38,6 @@ namespace TaskManagerAPI.Services
             if (!userInfo.IsAdmin)
                 taskItemsQuery = taskItemsQuery.Where(ti => ti.UserId == userInfo.UserId);
 
-
             if (!string.IsNullOrWhiteSpace(filters.Title))
             {
                 var titleFilter = filters.Title?.Trim();
@@ -60,10 +59,8 @@ namespace TaskManagerAPI.Services
             return pageResult;
         }
 
-
         public async Task<TaskItemDto> GetByIdAsync(int id, UserInfoDto userInfo, CancellationToken ct)
         {
-
             var taskItem = await _taskItemRepository.GetByIdAsync(id, ct);
 
             if (taskItem == null)
@@ -95,7 +92,6 @@ namespace TaskManagerAPI.Services
             return await GetByIdAsync(taskItem.Id, userInfo, ct);
         }
 
-
         public async Task UpdateAsync(int id, UpdateTaskItemDto updateDto, UserInfoDto userInfo, CancellationToken ct)
         {
             if (id != updateDto.Id)
@@ -125,11 +121,9 @@ namespace TaskManagerAPI.Services
             {
                 if (!await _taskItemRepository.ExistsAsync(taskItem.Id, ct))
                     throw new NotFoundException("TaskItem", taskItem.Id.ToString());
-
                 else
                     throw;
             }
-
         }
 
         public async Task DeleteAsync(int id, UserInfoDto userInfo, CancellationToken ct)

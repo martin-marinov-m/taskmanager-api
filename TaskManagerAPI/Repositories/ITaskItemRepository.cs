@@ -9,6 +9,5 @@ namespace TaskManagerAPI.Repositories
         Task<bool> ExistsAsync(int id, CancellationToken ct);
 
         void DeleteByEntity(TaskItem entity);
-
     }
 }

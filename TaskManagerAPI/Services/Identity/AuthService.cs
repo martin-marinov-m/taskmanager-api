@@ -20,6 +20,7 @@ namespace TaskManagerAPI.Services.Identity
             _userManager = userManager;
             _jwtOptions = jwtOptions;
         }
+
         public async Task<string> Login(LoginRequest request)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);

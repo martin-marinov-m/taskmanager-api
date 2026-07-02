@@ -6,6 +6,7 @@ namespace TaskManagerAPI.Services
     public interface ITaskItemStatusService
     {
         Task<IEnumerable<TaskItemStatusDto>> GetAllAsync(CancellationToken ct);
+
         Task<TaskItemStatusDto> GetByIdAsync(int id, CancellationToken ct);
 
         Task<TaskItemStatusDto> AddAsync(CreateTaskItemStatusDto createStatusDto, CancellationToken ct);
