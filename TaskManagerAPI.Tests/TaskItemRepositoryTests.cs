@@ -52,7 +52,7 @@ namespace TaskManagerAPI.Tests
             //Arrange
             using var connection = CreateConnection();
             using var dbContext = CreateDbContext(connection);
-            var respository = await CreateSeededTaskItemRepository(dbContext);
+            var repository = await CreateSeededTaskItemRepository(dbContext);
 
             var ct = CancellationToken.None;
 
@@ -91,7 +91,7 @@ namespace TaskManagerAPI.Tests
             await dbContext.SaveChangesAsync();
 
             //Act
-            var result = await respository.GetAllAsync(ct);
+            var result = await repository.GetAllAsync(ct);
 
             //Assert
             Assert.NotNull(result);
@@ -125,7 +125,7 @@ namespace TaskManagerAPI.Tests
             //Arrange
             using var connection = CreateConnection();
             using var dbContext = CreateDbContext(connection);
-            var respository = await CreateSeededTaskItemRepository(dbContext);
+            var repository = await CreateSeededTaskItemRepository(dbContext);
             var ct = CancellationToken.None;
 
             var taskItem = new TaskItem()
@@ -141,7 +141,7 @@ namespace TaskManagerAPI.Tests
             await dbContext.TaskItems.AddAsync(taskItem);
             await dbContext.SaveChangesAsync();
             //Act
-            var result = await respository.GetByIdAsync(taskItem.Id, ct);
+            var result = await repository.GetByIdAsync(taskItem.Id, ct);
 
             //Assert
             Assert.NotNull(result);

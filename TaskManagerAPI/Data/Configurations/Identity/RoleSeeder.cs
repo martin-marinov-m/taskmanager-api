@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using TaskManagerAPI.Constants;
+using TaskManagerAPI.GlobalExceptionHandler.Exceptions.Identity;
 
 namespace TaskManagerAPI.Data.Configurations.Identity
 {
@@ -17,7 +18,12 @@ namespace TaskManagerAPI.Data.Configurations.Identity
         private static async Task CreateRoleAsync(RoleManager<IdentityRole> roleManager, string role)
         {
             if (!await roleManager.RoleExistsAsync(role))
-                await roleManager.CreateAsync(new IdentityRole(role));
+            {
+                var result = await roleManager.CreateAsync(new IdentityRole(role));
+
+                if (!result.Succeeded)
+                    throw new RoleCreationFailedException(role, result.Errors.Select(e => e.Description));
+            }
         }
     }
 }

@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TaskManagerAPI.GlobalExceptionHandler.Exceptions;
+using TaskManagerAPI.GlobalExceptionHandler.Exceptions.Business;
+using TaskManagerAPI.GlobalExceptionHandler.Exceptions.Identity;
 
 namespace TaskManagerAPI.GlobalExceptionHandler
 {
@@ -31,53 +34,18 @@ namespace TaskManagerAPI.GlobalExceptionHandler
         {
             var problemDetails = exception switch
             {
-                UnauthorizedAccessException => new ProblemDetails
+                TaskManagerException ex => new ProblemDetails
                 {
-                    Title = "Unauthorized access",
-                    Detail = exception.Message,
-                    Status = StatusCodes.Status401Unauthorized,
-                    Type = "https://httpstatuses.com/401"
+                    Title = ex.Title,
+                    Detail = ex.Message,
+                    Status = ex.StatusCode,
+                    Type = ex.Type
                 },
 
-                ArgumentException => new ProblemDetails
-                {
-                    Title = "Invalid argument",
-                    Detail = exception.Message,
-                    Status = StatusCodes.Status400BadRequest,
-                    Type = "https://httpstatuses.com/400"
-
-                },
-
-                /* 
-                   KeyNotFoundException is currently used both for invalid application configuration (HTTP 500) and for resource not found scenarios (HTTP 404).
-                   
-                   In the next commit, it will be replaced with custom exceptions to allow different HTTP status codes.
-                */
-                KeyNotFoundException => new ProblemDetails
-                {
-                    Title = "Resource not found",
-                    Detail = exception.Message,
-                    Status = StatusCodes.Status404NotFound,
-                    Type = "https://httpstatuses.com/404"
-                },
-
-                /* 
-                    InvalidOperationException is currently used for invalid TokenExpirationInHours configuration (HTTP 500), failed user or role creation (HTTP 500), and invalid operations during request processing (HTTP 400).
-
-                    In the next commit, it will be replaced with custom exceptions to allow different HTTP status codes.
-                */
-                InvalidOperationException => new ProblemDetails
-                {
-                    Title = "Invalid operation",
-                    Detail = exception.Message,
-                    Status = StatusCodes.Status500InternalServerError,
-                    Type = "https://httpstatuses.com/500"
-                },
-
-                DbUpdateConcurrencyException => new ProblemDetails
+                DbUpdateConcurrencyException ex => new ProblemDetails
                 {
                     Title = "Database concurrency conflict",
-                    Detail = exception.Message,
+                    Detail = ex.Message,
                     Status = StatusCodes.Status500InternalServerError,
                     Type = "https://httpstatuses.com/500"
                 },
@@ -94,6 +62,9 @@ namespace TaskManagerAPI.GlobalExceptionHandler
 
             problemDetails.Extensions["traceId"] = httpContext.TraceIdentifier;
 
+            if (exception is IdentityOperationFailedException exc)
+                problemDetails.Extensions["errors"] = exc.Errors;
+
             return problemDetails;
         }
 
@@ -102,17 +73,39 @@ namespace TaskManagerAPI.GlobalExceptionHandler
         {
             switch (exception) 
             {
-                case UnauthorizedAccessException ex:
+                //Warnings
+                case UserAlreadyExistsException ex:
+                     _logger.LogWarning(ex, "User with email {Email} already exists. TraceId: {TraceId}", ex.Email, httpContext.TraceIdentifier);
+                    break;
+                case InvalidCredentialsException ex:
+                    _logger.LogWarning(ex, "Authentication Failed. Invalid email or password. TraceId: {TraceId}", httpContext.TraceIdentifier);
+                    break;
+                case NotFoundException ex:
+                    _logger.LogWarning(ex, "{ResourceName} with value {ResourceValue} not found. TraceId: {TraceId}", ex.ResourceName, ex.ResourceValue, httpContext.TraceIdentifier);
+                    break;
+                case ParameterValidationException ex:
+                    _logger.LogWarning(ex, "{Message}. ParameterName: {ParameterName}. ParameterValue: {ParameterValue}. TraceId: {TraceId}", ex.Message, ex.ParameterName, ex.ParameterValue, httpContext.TraceIdentifier);
+                    break;
+                case ForbiddenOperationException ex:
+                    _logger.LogWarning(ex, "{Message}. ResourceName: {ResourceName}. ResourceValue: {ResourceValue}. TraceId: {TraceId}",
+                        ex.Message, ex.ResourceName, ex.ResourceValue, httpContext.TraceIdentifier);
+                    break;
+                case UnauthorizedException ex:
                     _logger.LogWarning(ex, "{Message}. TraceId: {TraceId}", ex.Message, httpContext.TraceIdentifier);
                     break;
-                case ArgumentException ex:
-                    _logger.LogWarning(ex, "{Message}. TraceId: {TraceId}", ex.Message, httpContext.TraceIdentifier);
+                case ArgumentMismatchException ex:
+                    _logger.LogWarning(ex, "{ExpectedName} value '{ExpectedValue}' does not match {ActualName} value '{ActualValue}'. TraceId: {TraceId}", ex.ExpectedName, ex.ExpectedValue, ex.ActualName, ex.ActualValue, httpContext.TraceIdentifier);
                     break;
-                case KeyNotFoundException ex:
-                    _logger.LogWarning(ex, "{Message}. TraceId: {TraceId}", ex.Message, httpContext.TraceIdentifier);
+
+                    //Errors
+                case UserCreationFailedException ex:
+                    _logger.LogError(ex, "Failed to create user with email {Email}. Errors: {Errors}. TraceId: {TraceId}", ex.Email, string.Join(", ", ex.Errors), httpContext.TraceIdentifier);
                     break;
-                case InvalidOperationException ex:
-                    _logger.LogError(ex, "{Message}. TraceId: {TraceId}", ex.Message, httpContext.TraceIdentifier);
+                case RoleCreationFailedException ex:
+                    _logger.LogError(ex, "Failed to create role {Role}. Errors: {Errors}. TraceId: {TraceId}", ex.Role, string.Join(", ",ex.Errors), httpContext.TraceIdentifier);
+                    break;
+                case RoleAssignmentFailedException ex:
+                    _logger.LogError(ex, "Failed to assign role {Role} to user with email {Email}. Errors: {Errors}. TraceId: {TraceId}", ex.Role, ex.Email, string.Join(", ", ex.Errors), httpContext.TraceIdentifier);
                     break;
                 case DbUpdateConcurrencyException ex:
                     _logger.LogError(ex, "Database concurrency conflict. TraceId: {TraceId}", httpContext.TraceIdentifier);

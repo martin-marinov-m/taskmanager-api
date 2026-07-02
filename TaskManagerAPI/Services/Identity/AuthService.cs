@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using TaskManagerAPI.GlobalExceptionHandler.Exceptions.Identity;
 using TaskManagerAPI.Models.Identity;
 using TaskManagerAPI.Options;
 
@@ -24,7 +25,7 @@ namespace TaskManagerAPI.Services.Identity
             var user = await _userManager.FindByEmailAsync(request.Email);
 
             if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password))
-                throw new UnauthorizedAccessException("Invalid email or password");
+                throw new InvalidCredentialsException();
 
             var roles = await _userManager.GetRolesAsync(user);
 

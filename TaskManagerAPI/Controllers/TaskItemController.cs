@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TaskManagerAPI.Constants;
+using TaskManagerAPI.GlobalExceptionHandler.Exceptions.Business;
 using TaskManagerAPI.Models.Dtos.TaskItemDtos;
 using TaskManagerAPI.Models.Filters;
 using TaskManagerAPI.Models.Identity;
@@ -73,7 +74,7 @@ namespace TaskManagerAPI.Controllers
         }
         private string GetUserId()
         {
-            return User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new UnauthorizedAccessException("Unauthorized access");
+            return User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new UnauthorizedException("NameIdentifier claim is missing");
         }
 
         private bool IsUserAdmin()

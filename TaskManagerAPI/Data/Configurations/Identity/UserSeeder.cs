@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using TaskManagerAPI.Constants;
+using TaskManagerAPI.GlobalExceptionHandler.Exceptions.Identity;
+using TaskManagerAPI.GlobalExceptionHandler.Exceptions.Server;
 using TaskManagerAPI.Models.Identity;
 using TaskManagerAPI.Options;
 
@@ -12,27 +15,27 @@ namespace TaskManagerAPI.Data.Configurations.Identity
         {
             var userManager = serviceProvider.GetRequiredService<UserManager<TaskManagerUser>>();
 
-            var seededEmailsOptions = serviceProvider.GetRequiredService<IOptions<SeededEmailsOptions>>().Value ?? throw new KeyNotFoundException("SeededEmails configuration was not found.");
+            var seededEmailsOptions = serviceProvider.GetRequiredService<IOptions<SeededEmailsOptions>>().Value ?? throw new InvalidConfigurationException("SeededEmails");
 
             if (string.IsNullOrWhiteSpace(seededEmailsOptions.Admin))
-                throw new KeyNotFoundException("Email for Admin was not found.");
+                throw new InvalidConfigurationException("SeededEmails:Admin");
 
             if (string.IsNullOrWhiteSpace(seededEmailsOptions.TeamLeader))
-                throw new KeyNotFoundException("Email for TeamLeader was not found.");
+                throw new InvalidConfigurationException("SeededEmails:TeamLeader");
 
             if (string.IsNullOrWhiteSpace(seededEmailsOptions.Developer))
-                throw new KeyNotFoundException("Email for Developer was not found.");
+                throw new InvalidConfigurationException("SeededEmails:Developer");
 
-            var seededPasswordsOptions = serviceProvider.GetRequiredService<IOptions<SeededPasswordsOptions>>().Value ?? throw new KeyNotFoundException("SeededPasswords configuration was not found."); 
+            var seededPasswordsOptions = serviceProvider.GetRequiredService<IOptions<SeededPasswordsOptions>>().Value ?? throw new InvalidConfigurationException("SeededPasswords"); 
 
             if (string.IsNullOrWhiteSpace(seededPasswordsOptions.Admin))
-                throw new KeyNotFoundException("Password for Admin was not found.");
+                throw new InvalidConfigurationException("SeededPasswords:Admin");
 
             if (string.IsNullOrWhiteSpace(seededPasswordsOptions.TeamLeader))
-                throw new KeyNotFoundException("Password for TeamLeader was not found.");
+                throw new InvalidConfigurationException("SeededPasswords:TeamLeader");
 
             if (string.IsNullOrWhiteSpace(seededPasswordsOptions.Developer))
-                throw new KeyNotFoundException("Password for Developer was not found.");
+                throw new InvalidConfigurationException("SeededPasswords:Developer");
 
             //Admin role
             await CreateUserWithRole(userManager, seededEmailsOptions.Admin, seededPasswordsOptions.Admin, Roles.Admin);
@@ -59,12 +62,12 @@ namespace TaskManagerAPI.Data.Configurations.Identity
                 var createResult = await userManager.CreateAsync(user, password);
 
                 if (!createResult.Succeeded)
-                    throw new Exception($"Failed to create User with email: {email}. Errors: {string.Join(",", createResult.Errors)}");
+                    throw new UserCreationFailedException(user.Email, createResult.Errors.Select(e => e.Description));
 
                 var roleAssignResult = await userManager.AddToRoleAsync(user, role);
 
                 if (!roleAssignResult.Succeeded)
-                    throw new Exception($"Failed to assigned role \'{role}\' to user with email: {email}. Errors: {string.Join(",", roleAssignResult.Errors)}");
+                    throw new RoleAssignmentFailedException(user.Email, role, roleAssignResult.Errors.Select(e => e.Description));
             }
         }
     }

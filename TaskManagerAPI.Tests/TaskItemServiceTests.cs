@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using TaskManagerAPI.AutoMapper;
 using TaskManagerAPI.Data;
+using TaskManagerAPI.GlobalExceptionHandler.Exceptions.Business;
 using TaskManagerAPI.Models;
 using TaskManagerAPI.Models.Dtos.TaskItemDtos;
 using TaskManagerAPI.Models.Filters;
@@ -448,6 +449,7 @@ namespace TaskManagerAPI.Tests
         [Fact]
         public async Task GetByIdAsync_TaskItemExists_Admin_ShouldReturnTaskItemDto()
         {
+            //Arrange
             using var connection = CreateConnection();
             using var dbContext = CreateDbContent(connection);
             var service = await CreateSeededservice(dbContext);
@@ -487,7 +489,7 @@ namespace TaskManagerAPI.Tests
         }
 
         [Fact]
-        public async Task GetByIdAsync_WhenTaskItemDoesNotExists_ShouldThrowKeyNotFoundException()
+        public async Task GetByIdAsync_WhenTaskItemDoesNotExists_ShouldThrowNotFoundException()
         {
             //Arrange
             using var connection = CreateConnection();
@@ -502,12 +504,12 @@ namespace TaskManagerAPI.Tests
             };
 
             //Act-Assert
-            await Assert.ThrowsAsync<KeyNotFoundException>(() => service.GetByIdAsync(int.MaxValue, userInfo, ct));
+            await Assert.ThrowsAsync<NotFoundException>(() => service.GetByIdAsync(int.MaxValue, userInfo, ct));
 
         }
 
         [Fact]
-        public async Task GetByIdAsync_TaskItemExists_InvalidUser_ShouldThrowUnauthorizedAccessException()
+        public async Task GetByIdAsync_TaskItemExists_InvalidUser_ShouldThrowForbiddenOperationException()
         {
             //Arrange
             using var connection = CreateConnection();
@@ -535,13 +537,13 @@ namespace TaskManagerAPI.Tests
             };
 
             //Act-Assert
-            await Assert.ThrowsAsync<UnauthorizedAccessException>(() => service.GetByIdAsync(taskItem.Id, userInfo, ct));
+            await Assert.ThrowsAsync<ForbiddenOperationException>(() => service.GetByIdAsync(taskItem.Id, userInfo, ct));
         }
 
         [Fact]
-        public async Task AddAsync_WhenDueDateIsInPast_ShouldThrowArgumentException()
+        public async Task AddAsync_WhenDueDateIsInPast_ShouldThrowParameterValidationException()
         {
-            //Arange
+            //Arrange
             using var connection = CreateConnection();
             using var dbContext = CreateDbContent(connection);
             var service = await CreateSeededservice(dbContext);
@@ -561,15 +563,15 @@ namespace TaskManagerAPI.Tests
                 IsAdmin = false
             };
 
-            //Act-Arrange
-            await Assert.ThrowsAsync<ArgumentException>(() => service.AddAsync(taskItem, userInfo, ct));
+            //Act-Assert
+            await Assert.ThrowsAsync<ParameterValidationException>(() => service.AddAsync(taskItem, userInfo, ct));
         }
 
 
         [Fact]
-        public async Task AddAsync_ValidOrNullDueDate_StatusNotExists_ShouldThrowKeyNotFoundException()
+        public async Task AddAsync_ValidOrNullDueDate_StatusNotExists_ShouldThrowNotFoundException()
         {
-            //Arange
+            //Arrange
             using var connection = CreateConnection();
             using var dbContext = CreateDbContent(connection);
             var service = await CreateSeededservice(dbContext);
@@ -589,14 +591,14 @@ namespace TaskManagerAPI.Tests
                 IsAdmin = false
             };
 
-            //Act-Arrange
-            await Assert.ThrowsAsync<KeyNotFoundException>(() => service.AddAsync(taskItem, userInfo, ct));
+            //Act-Assert
+            await Assert.ThrowsAsync<NotFoundException>(() => service.AddAsync(taskItem, userInfo, ct));
         }
 
         [Fact]
         public async Task AddAsync_ValidOrNullDueDate_StatusExists_ShouldAddTaskItemAndReturnTaskItemDto()
         {
-            //Arange
+            //Arrange
             using var connection = CreateConnection();
             using var dbContext = CreateDbContent(connection);
             var service = await CreateSeededservice(dbContext);
@@ -619,7 +621,7 @@ namespace TaskManagerAPI.Tests
             //Act
             var result = await service.AddAsync(taskItem, userInfo, ct);
 
-            //Act
+            //Assert
             Assert.NotNull(result);
             Assert.NotNull(result.Status);
             Assert.Null(result.DueDate);
@@ -630,7 +632,7 @@ namespace TaskManagerAPI.Tests
         }
 
         [Fact]
-        public async Task UpdateAsync_WhenIdsDoNotMatch_ShouldThrowArgumentException()
+        public async Task UpdateAsync_WhenIdsDoNotMatch_ShouldThrowArgumentMismatchException()
         {
             //Arrange
             using var connection = CreateConnection();
@@ -654,11 +656,11 @@ namespace TaskManagerAPI.Tests
             };
 
             //Act-Assert
-            await Assert.ThrowsAsync<ArgumentException>(() => service.UpdateAsync(int.MaxValue, updateDto, userInfo, ct));
+            await Assert.ThrowsAsync<ArgumentMismatchException>(() => service.UpdateAsync(int.MaxValue, updateDto, userInfo, ct));
         }
 
         [Fact]
-        public async Task UpdateAsync_IdsMatch_DueDateIsInPast_ShouldThrowArgumentException()
+        public async Task UpdateAsync_IdsMatch_DueDateIsInPast_ShouldThrowParameterValidationException()
         {
             //Arrange
             using var connection = CreateConnection();
@@ -682,11 +684,11 @@ namespace TaskManagerAPI.Tests
             };
 
             //Act-Assert
-            await Assert.ThrowsAsync<ArgumentException>(() => service.UpdateAsync(1, updateDto, userInfo, ct));
+            await Assert.ThrowsAsync<ParameterValidationException>(() => service.UpdateAsync(1, updateDto, userInfo, ct));
         }
 
         [Fact]
-        public async Task UpdateAsync_IdsMatch_ValidOrNullDueDate_InvalidStatusId_ShouldThrowKeyNotFoundException()
+        public async Task UpdateAsync_IdsMatch_ValidOrNullDueDate_InvalidStatusId_ShouldThrowNotFoundException()
         {
             //Arrange
             using var connection = CreateConnection();
@@ -710,11 +712,11 @@ namespace TaskManagerAPI.Tests
             };
 
             //Act-Assert
-            await Assert.ThrowsAsync<KeyNotFoundException>(() => service.UpdateAsync(1, updateDto, userInfo, ct));
+            await Assert.ThrowsAsync<NotFoundException>(() => service.UpdateAsync(1, updateDto, userInfo, ct));
         }
 
         [Fact]
-        public async Task UpdateAsync_IdsMatch_ValidOrNullDueDate_ValidStatusId_TaskDoesNotExists_ShouldThrowKeyNotFoundException()
+        public async Task UpdateAsync_IdsMatch_ValidOrNullDueDate_ValidStatusId_TaskDoesNotExists_ShouldThrowNotFoundException()
         {
             //Arrange
             using var connection = CreateConnection();
@@ -738,11 +740,11 @@ namespace TaskManagerAPI.Tests
             };
 
             //Act-Assert
-            await Assert.ThrowsAsync<KeyNotFoundException>(() => service.UpdateAsync(1, updateDto, userInfo, ct));
+            await Assert.ThrowsAsync<NotFoundException>(() => service.UpdateAsync(1, updateDto, userInfo, ct));
         }
 
         [Fact]
-        public async Task UpdateAsync_IdsMatch_ValidOrNullDueDate_ValidStatusId_TaskExists_InvalidUser_ShouldThrowUnauthorizedAccessException()
+        public async Task UpdateAsync_IdsMatch_ValidOrNullDueDate_ValidStatusId_TaskExists_InvalidUser_ShouldThrowForbiddenOperationException()
         {
             //Arrange
             using var connection = CreateConnection();
@@ -779,7 +781,7 @@ namespace TaskManagerAPI.Tests
             };
 
             //Act-Assert
-            await Assert.ThrowsAsync<UnauthorizedAccessException>(() => service.UpdateAsync(updateDto.Id, updateDto, userInfo, ct));
+            await Assert.ThrowsAsync<ForbiddenOperationException>(() => service.UpdateAsync(updateDto.Id, updateDto, userInfo, ct));
         }
 
         [Fact]
@@ -894,7 +896,7 @@ namespace TaskManagerAPI.Tests
         }
 
         [Fact]
-        public async Task DeleteAsync_WhenTaskItemDoesNotExists_ShouldThrowKeyNotFoundException()
+        public async Task DeleteAsync_WhenTaskItemDoesNotExists_ShouldThrowNotFoundException()
         {
             //Arrange
             using var connection = CreateConnection();
@@ -908,13 +910,13 @@ namespace TaskManagerAPI.Tests
                 IsAdmin = true,
             };
 
-            //Act-Arrange
-            await Assert.ThrowsAsync<KeyNotFoundException>(() => service.DeleteAsync(int.MaxValue, userInfo, ct));
+            //Act-Assert
+            await Assert.ThrowsAsync<NotFoundException>(() => service.DeleteAsync(int.MaxValue, userInfo, ct));
 
         }
 
         [Fact]
-        public async Task DeleteAsync_TaskItemExists_InvalidUser_ShouldThrowUnauthorizedAccessException()
+        public async Task DeleteAsync_TaskItemExists_InvalidUser_ShouldThrowForbiddenOperationException()
         {
             //Arrange
             using var connection = CreateConnection();
@@ -941,8 +943,8 @@ namespace TaskManagerAPI.Tests
                 IsAdmin = false,
             };
 
-            //Act-Arrange
-            await Assert.ThrowsAsync<UnauthorizedAccessException>(() => service.DeleteAsync(taskItem.Id, userInfo, ct));
+            //Act-Assert
+            await Assert.ThrowsAsync<ForbiddenOperationException>(() => service.DeleteAsync(taskItem.Id, userInfo, ct));
 
         }
 
@@ -980,7 +982,7 @@ namespace TaskManagerAPI.Tests
 
             var result = await dbContext.TaskItems.FirstOrDefaultAsync(ti => ti.Id == taskItem.Id);
 
-            //Arrange
+            //Assert
             Assert.Null(result);
         }
 
@@ -1017,7 +1019,7 @@ namespace TaskManagerAPI.Tests
 
             var result = await dbContext.TaskItems.FirstOrDefaultAsync(ti => ti.Id == taskItem.Id);
 
-            //Arrange
+            //Assert
             Assert.Null(result);
         }
 

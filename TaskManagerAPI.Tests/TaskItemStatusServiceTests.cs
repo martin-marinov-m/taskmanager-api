@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using TaskManagerAPI.AutoMapper;
 using TaskManagerAPI.Data;
+using TaskManagerAPI.GlobalExceptionHandler.Exceptions.Business;
 using TaskManagerAPI.Models;
 using TaskManagerAPI.Models.Dtos;
 using TaskManagerAPI.Models.Dtos.TaskItemStatusDtos;
@@ -113,7 +114,7 @@ namespace TaskManagerAPI.Tests
         }
 
         [Fact]
-        public async Task GetByIdAsync_WhenTaskItemStatusIsNotFound_ShouldThrowKeyNotFoundException()
+        public async Task GetByIdAsync_WhenTaskItemStatusIsNotFound_ShouldThrowNotFoundException()
         {
             //Arrange
             using var connection = CreateConnection();
@@ -123,7 +124,7 @@ namespace TaskManagerAPI.Tests
             var ct = CancellationToken.None;
 
             //Act-Assert
-            await Assert.ThrowsAsync<KeyNotFoundException>(() => service.GetByIdAsync(int.MaxValue, ct));
+            await Assert.ThrowsAsync<NotFoundException>(() => service.GetByIdAsync(int.MaxValue, ct));
 
         }
 
@@ -147,6 +148,7 @@ namespace TaskManagerAPI.Tests
 
             var findResult = await dbContext.TaskItemStatuses.FindAsync(resultCreate.Id);
 
+            //Assert
             Assert.NotNull(resultCreate);
             Assert.Equal("CreateTest", resultCreate.Name);
             Assert.NotNull(findResult);
@@ -154,7 +156,7 @@ namespace TaskManagerAPI.Tests
         }
 
         [Fact]
-        public async Task UpdateAsync_WhenIdsDoNotMatch_ShouldThrowArgumentException()
+        public async Task UpdateAsync_WhenIdsDoNotMatch_ShouldThrowArgumentMismatchException()
         {
             //Arrange
             using var connection = CreateConnection();
@@ -171,20 +173,20 @@ namespace TaskManagerAPI.Tests
             await dbContext.TaskItemStatuses.AddAsync(status);
             await dbContext.SaveChangesAsync();
 
-            //Act-Assert
-
             var updateDto = new TaskItemStatusDto
             {
                 Id = 4,
                 Name = "PostUpdateTest"
             };
 
-            await Assert.ThrowsAsync<ArgumentException>(() => service.UpdateAsync(int.MaxValue, updateDto, ct));
+            //Act-Assert
+
+            await Assert.ThrowsAsync<ArgumentMismatchException>(() => service.UpdateAsync(int.MaxValue, updateDto, ct));
 
         }
 
         [Fact]
-        public async Task UpdateAsync_WhenIdsMatchAndTaskItemStatusDoesNotExist_ShouldThrowKeyNotFoundException()
+        public async Task UpdateAsync_WhenIdsMatchAndTaskItemStatusDoesNotExist_ShouldThrowNotFoundException()
         {
             //Arrange
             using var connection = CreateConnection();
@@ -193,16 +195,15 @@ namespace TaskManagerAPI.Tests
 
             var ct = CancellationToken.None;
 
-
-            //Act-Assert
-
             var updateDto = new TaskItemStatusDto
             {
                 Id = 4,
                 Name = "PostUpdateTest"
             };
 
-            await Assert.ThrowsAsync<KeyNotFoundException>(() => service.UpdateAsync(updateDto.Id, updateDto, ct));
+            //Act-Assert
+
+            await Assert.ThrowsAsync<NotFoundException>(() => service.UpdateAsync(updateDto.Id, updateDto, ct));
 
         }
 
@@ -244,7 +245,7 @@ namespace TaskManagerAPI.Tests
         }
 
         [Fact]
-        public async Task DeleteAsync_WhenTaskItemStatusDoesNotExist_ShouldThrowKeyNotFoundException()
+        public async Task DeleteAsync_WhenTaskItemStatusDoesNotExist_ShouldThrowNotFoundException()
         {
             //Arrange
             using var connection = CreateConnection();
@@ -254,7 +255,7 @@ namespace TaskManagerAPI.Tests
             var ct = CancellationToken.None;
 
             //Act-Assert
-            await Assert.ThrowsAsync<KeyNotFoundException>(() => service.DeleteAsync(int.MaxValue, ct));
+            await Assert.ThrowsAsync<NotFoundException>(() => service.DeleteAsync(int.MaxValue, ct));
         }
 
 

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using TaskManagerAPI.Constants;
+using TaskManagerAPI.GlobalExceptionHandler.Exceptions.Business;
+using TaskManagerAPI.GlobalExceptionHandler.Exceptions.Identity;
 using TaskManagerAPI.Models.Identity;
 
 namespace TaskManagerAPI.Services.Identity
@@ -15,12 +17,12 @@ namespace TaskManagerAPI.Services.Identity
         public async Task Register(RegisterRequest request)
         {
             if (await _userManager.FindByEmailAsync(request.Email) != null)
-                throw new InvalidOperationException("User already exists");
+                throw new UserAlreadyExistsException(request.Email);
 
             var validRoles = new HashSet<string>() { Roles.Admin, Roles.TeamLeader, Roles.Developer };
 
             if (!validRoles.Contains(request.Role))
-                throw new ArgumentException($"Role {request.Role} is invalid");
+                throw new ParameterValidationException("Invalid role", "Role", request.Role);
 
             var user = new TaskManagerUser
             {
@@ -32,12 +34,12 @@ namespace TaskManagerAPI.Services.Identity
             var createResult = await _userManager.CreateAsync(user, request.Password);
 
             if (!createResult.Succeeded)
-                throw new InvalidOperationException($"Failed to create User with email: {user.Email}. Errors: {string.Join(",", createResult.Errors)}");
+                throw new UserCreationFailedException(user.Email, createResult.Errors.Select(e => e.Description));
 
             var roleAssignResult = await _userManager.AddToRoleAsync(user, request.Role);
 
             if (!roleAssignResult.Succeeded)
-                throw new InvalidOperationException($"Failed to assign role to User with email: {user.Email}. Errors: {string.Join(",", roleAssignResult.Errors)}");
+                throw new RoleAssignmentFailedException(user.Email, request.Role, roleAssignResult.Errors.Select(e => e.Description));
         }
     }
 }

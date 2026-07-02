@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using TaskManagerAPI.GlobalExceptionHandler.Exceptions.Business;
 using TaskManagerAPI.Models;
 using TaskManagerAPI.Models.Dtos;
 using TaskManagerAPI.Models.Dtos.TaskItemStatusDtos;
@@ -32,7 +33,7 @@ namespace TaskManagerAPI.Services
             var taskItemStatus = await _taskItemStatusRepository.GetByIdAsync(id, ct);
 
             if (taskItemStatus == null)
-                throw new KeyNotFoundException("Status not Found.");
+                throw new NotFoundException("TaskItemStatus", id.ToString());
 
             var taskItemStatusDto = _mapper.Map<TaskItemStatusDto>(taskItemStatus);
 
@@ -51,17 +52,17 @@ namespace TaskManagerAPI.Services
             return taskItemStatusDto;
         }
 
-        public async Task UpdateAsync(int id, TaskItemStatusDto statusDto, CancellationToken ct)
+        public async Task UpdateAsync(int id, TaskItemStatusDto updateDto, CancellationToken ct)
         {
-            if (id != statusDto.Id)
-                throw new ArgumentException("Id from URL and Id from object does not match");
+            if (id != updateDto.Id)
+                throw new ArgumentMismatchException(nameof(id), id.ToString(), nameof(updateDto.Id), updateDto.Id.ToString());
 
-            var taskItemStatus = await _taskItemStatusRepository.GetByIdAsync(id, ct);
+            var taskItemStatus = await _taskItemStatusRepository.GetByIdAsync(updateDto.Id, ct);
 
             if (taskItemStatus == null)
-                throw new KeyNotFoundException("Status not Found");
+                throw new NotFoundException("TaskItemStatus", updateDto.Id.ToString());
 
-            _mapper.Map(statusDto, taskItemStatus);
+            _mapper.Map(updateDto, taskItemStatus);
 
             try
             {
@@ -69,8 +70,8 @@ namespace TaskManagerAPI.Services
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!await _taskItemStatusRepository.ExistsAsync(statusDto.Id, ct))
-                    throw new KeyNotFoundException("Status Not Found");
+                if (!await _taskItemStatusRepository.ExistsAsync(taskItemStatus.Id, ct))
+                    throw new NotFoundException("TaskItemStatus", taskItemStatus.Id.ToString());
                 else
                     throw;
             }
@@ -81,7 +82,7 @@ namespace TaskManagerAPI.Services
             var result = await _taskItemStatusRepository.DeleteByIdAsync(id, ct);
 
             if (!result)
-                throw new KeyNotFoundException("Status not Found");
+                throw new NotFoundException("TaskItemStatus", id.ToString());
 
             await _taskItemStatusRepository.SaveChangesAsync(ct);
         }

@@ -9,6 +9,7 @@ using System.Text;
 using TaskManagerAPI.Data;
 using TaskManagerAPI.Data.Configurations.Identity;
 using TaskManagerAPI.GlobalExceptionHandler;
+using TaskManagerAPI.GlobalExceptionHandler.Exceptions.Server;
 using TaskManagerAPI.Models.Identity;
 using TaskManagerAPI.Options;
 using TaskManagerAPI.Repositories;
@@ -45,19 +46,19 @@ namespace TaskManagerAPI
             builder.Services.Configure<SeededEmailsOptions>(builder.Configuration.GetSection("SeededEmails"));
             builder.Services.Configure<SeededPasswordsOptions>(builder.Configuration.GetSection("SeededPasswords"));
 
-            var jwtOptions = builder.Configuration.GetSection("JWT").Get<JWTOptions>() ?? throw new KeyNotFoundException("JWT configuration not found");
+            var jwtOptions = builder.Configuration.GetSection("JWT").Get<JWTOptions>() ?? throw new InvalidConfigurationException("JWT");
 
             if (string.IsNullOrWhiteSpace(jwtOptions.Key))
-                throw new KeyNotFoundException("JWT key not found");
+                throw new InvalidConfigurationException("JWT:Key");
 
             if (string.IsNullOrWhiteSpace(jwtOptions.Issuer))
-                throw new KeyNotFoundException("JWT issuer not found");
+                throw new InvalidConfigurationException("JWT:Issuer");
 
             if (string.IsNullOrWhiteSpace(jwtOptions.Audience))
-                throw new KeyNotFoundException("JWT audience not found");
+                throw new InvalidConfigurationException("JWT:Audience");
 
             if (jwtOptions.TokenExpirationInHours <= 0)
-                throw new InvalidOperationException("Invalid JWT TokenExpirationInHours configuration");
+                throw new InvalidConfigurationException("Jwt:TokenExpirationInHours");
 
             builder.Services.AddExceptionHandler<TaskManagerGlobalExceptionHandler>();
             builder.Services.AddProblemDetails();

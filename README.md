@@ -28,13 +28,14 @@ RESTful ASP.NET Core Web API for managing tasks with JWT authentication, role-ba
 - Swagger UI with JWT authentication support
 - Task management domain (TaskItem, TaskItemStatus)
 - Clean layered architecture (Controller → Service → Repository)
-- TaskItemStatus management (GetAll, GetById, Create, Update, Delete)
+- TaskItemStatuses management (GetAll, GetById, Create, Update, Delete)
 - TaskItems management (GetAll, GetById, Create, Update, Delete)
 - Custom response headers for paging metadata
 - Role-based data access (Admin vs User)
 - DTO mapping using AutoMapper
 - FluentValidation for request validation
 - Global exception handling using ProblemDetails
+- Custom exception hierarchy
 - Structured application logging
 
 
@@ -45,7 +46,6 @@ RESTful ASP.NET Core Web API for managing tasks with JWT authentication, role-ba
 - ASP.NET Core Identity
 - JWT Authentication
 - Swagger (Swashbuckle)
-- Repository Pattern
 - AutoMapper
 - FluentValidation
 
@@ -56,6 +56,7 @@ The project follows a layered architecture:
 - Services – contain business logic
 - Repositories – handle data access using Entity Framework Core
 - Data layer – DbContext and entity configurations
+- Global Exception Handler – centralized error handling and API error responses
 
 ## API Endpoints
 

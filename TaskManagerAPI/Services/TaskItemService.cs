@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using TaskManagerAPI.GlobalExceptionHandler.Exceptions.Business;
 using TaskManagerAPI.Models;
 using TaskManagerAPI.Models.Dtos.TaskItemDtos;
 using TaskManagerAPI.Models.Filters;
@@ -66,10 +67,10 @@ namespace TaskManagerAPI.Services
             var taskItem = await _taskItemRepository.GetByIdAsync(id, ct);
 
             if (taskItem == null)
-                throw new KeyNotFoundException("Task not Found");
+                throw new NotFoundException("TaskItem", id.ToString());
 
             if (!userInfo.IsAdmin && userInfo.UserId != taskItem.UserId)
-                throw new UnauthorizedAccessException("Unauthorized access");
+                throw new ForbiddenOperationException("User can access only his TaskItem");
 
             var taskItemDto = _mapper.Map<TaskItemDto>(taskItem);
 
@@ -79,10 +80,10 @@ namespace TaskManagerAPI.Services
         public async Task<TaskItemDto> AddAsync(CreateTaskItemDto createDto, UserInfoDto userInfo, CancellationToken ct)
         {
             if (createDto.DueDate.HasValue && createDto.DueDate < DateTime.UtcNow)
-                throw new ArgumentException("DueDate cannot be in past.");
+                throw new ParameterValidationException("Date cannot be in the past", "DueDate", createDto.DueDate.Value.ToString());
 
             if (!await _taskItemStatusRepository.ExistsAsync(createDto.StatusId, ct))
-                throw new KeyNotFoundException("Status not Found");
+                throw new NotFoundException("TaskItemStatus", createDto.StatusId.ToString());
 
             var taskItem = _mapper.Map<TaskItem>(createDto);
 
@@ -98,21 +99,21 @@ namespace TaskManagerAPI.Services
         public async Task UpdateAsync(int id, UpdateTaskItemDto updateDto, UserInfoDto userInfo, CancellationToken ct)
         {
             if (id != updateDto.Id)
-                throw new ArgumentException("ID from URL and ID from object does not match");
+                throw new ArgumentMismatchException(nameof(id), id.ToString(), nameof(updateDto.Id), updateDto.Id.ToString());
 
             if (updateDto.DueDate.HasValue && updateDto.DueDate < DateTime.UtcNow)
-                throw new ArgumentException("DueDate cannot be in past.");
+                throw new ParameterValidationException("Date cannot be in the past", "DueDate", updateDto.DueDate.Value.ToString());
 
             if (!await _taskItemStatusRepository.ExistsAsync(updateDto.StatusId, ct))
-                throw new KeyNotFoundException("Status not Found");
+                throw new NotFoundException("TaskItemStatus", updateDto.StatusId.ToString());
 
             var taskItem = await _taskItemRepository.GetByIdAsync(updateDto.Id, ct);
 
             if (taskItem == null)
-                throw new KeyNotFoundException("Task not Found");
+                throw new NotFoundException("TaskItem", updateDto.Id.ToString());
 
             if (!userInfo.IsAdmin && taskItem.UserId != userInfo.UserId)
-                throw new UnauthorizedAccessException("Unauthorized access");
+                throw new ForbiddenOperationException("User can update only his TaskItem");
 
             _mapper.Map(updateDto, taskItem);
 
@@ -123,7 +124,8 @@ namespace TaskManagerAPI.Services
             catch (DbUpdateConcurrencyException)
             {
                 if (!await _taskItemRepository.ExistsAsync(taskItem.Id, ct))
-                    throw new KeyNotFoundException("Task not Found");
+                    throw new NotFoundException("TaskItem", taskItem.Id.ToString());
+
                 else
                     throw;
             }
@@ -135,10 +137,10 @@ namespace TaskManagerAPI.Services
             var taskItem = await _taskItemRepository.GetByIdAsync(id, ct);
 
             if (taskItem == null)
-                throw new KeyNotFoundException("Task not Found");
+                throw new NotFoundException("TaskItem", id.ToString());
 
             if (!userInfo.IsAdmin && userInfo.UserId != taskItem.UserId)
-                throw new UnauthorizedAccessException("Unauthorized access");
+                throw new ForbiddenOperationException("User can delete only his TaskItem");
 
             _taskItemRepository.DeleteByEntity(taskItem);
             await _taskItemRepository.SaveChangesAsync(ct);
